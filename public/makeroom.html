@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>곰곰해 :: BearChain</title>
+    <script src="/public/module.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/public/style.css">
+    
+    <script>
+        var host;
+        var 
+    </script>
+</head>
+
+<body onload="document.makeinfo.title.focus()">
+    <div class="screen">
+        <div class="gamebox">
+            <h2>
+                방 만들기
+            </h2>
+            <hr class="line">
+            <div class="wrap_center">
+                <form name="makeinfo" method="post" action="/process/makegame" style="text-align: center">
+                    <table class="maketable">
+                        <tr>
+                            <td class="makelist">방 제목</td>
+                            <td>
+                                <input class="input_make" type="text" name="title" placeholder="심심이는 곰곰해" maxlength="15">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="makelist">암호</td>
+                            <td>
+                                <input class="input_make" type="text" name="password" placeholder="비공개를 원할때만 입력!" maxlength="12">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="makelist">글자수 제한</td>
+                            <td>
+                                <div class="radio">
+                                    <label><input type="radio" name="wordlimit" value="0" checked="checked">제한없음</label>
+                                    <label><input type="radio" name="wordlimit" value="3">3글자</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="makelist">시간 제한</td>
+                            <td>
+                                <div class="radio">
+                                    <label><input type="radio" name="timelimit" value="3">3초</label>
+                                    <label><input type="radio" name="timelimit" value="5" checked="checked">5초</label>
+                                    <label><input type="radio" name="timelimit" value="7">7초</label> <label><input type="radio" name="timelimit" value="9">9초</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="makelist">한방단어 금지</td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" checked="checked" name="noblack" value="1">금지!
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="button" onclick="location.href = '/process/enter'" value="<뒤로가기">
+                    <input type="submit" name="makegame" value="방만들기!">
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

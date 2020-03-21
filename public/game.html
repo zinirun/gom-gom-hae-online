@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>곰곰해 :: BearChain</title>
+    <script src="/public/module.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/public/style.css">
+</head>
+
+<body onload="document.doGame.getAnswer.focus()">
+    <div class="screen">
+        <div class="gamebox">
+            <div class="logo">
+                <%= othernick %>님과의 게임
+            </div>
+            <form name="doGame">
+                <input type="text" name="viewQuiz" value="<%= quizword %>" disabled><br>
+                <input type="text" name="viewMean" value="<%= wordmean %>" disabled><br>
+                <input type="text" name="getAnswer" maxlength="15" placeholder="단어 입력!">
+                <input type="submit" style="display: none">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
