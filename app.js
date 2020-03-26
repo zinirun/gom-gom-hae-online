@@ -60,9 +60,9 @@ router.route('/').get(function (req, res) {
 //메인 로그인 라우터
 router.route('/process/login').post(function (req, res) {
     console.log('로그인 라우터 호출됨');
-    
+
     var paramId = req.body.nickname;
-    
+
     if (req.session.user) {
         console.log('유저정보 존재 - 게임 이동');
         res.redirect('/process/game');
@@ -71,20 +71,19 @@ router.route('/process/login').post(function (req, res) {
             id: paramId,
             authorized: true
         };
-        res.redirect('/process/game/' + paramId);
+        res.redirect('/process/game');
     }
 });
 
 //게임 입장 라우터
-router.route('/process/game/:id').get(function (req, res) {
+router.route('/process/game/').get(function (req, res) {
     console.log('게임 입장 라우터 호출됨');
-    var userId = req.params.id;
-    var roomId = 1;
     if (req.session.user) {
         //채팅 서버 입장
-
-
+        var userId = req.session.user.id;
+        var roomId = 1;
         fs.readFile('./public/game.html', 'utf8', function (error, data) {
+            console.log(req.session.user.id + ":id로 렌더링");
             res.send(ejs.render(data, {
                 userId: userId,
                 roomId: roomId
@@ -92,7 +91,7 @@ router.route('/process/game/:id').get(function (req, res) {
         });
 
     } else {
-        console.log("유저정보 없음 - 메인 이동")
+        console.log("유저정보 없음 - 메인 이동");
         res.redirect('/');
     }
 });
@@ -138,30 +137,32 @@ http.listen(app.get('port'),
     }
 );
 
-io.on('connection', function(socket){
-    
+io.on('connection', function (socket) {
+
     console.log('채팅 서버 연결됨');
-    
-    socket.on('join', function(data){
-       
-        socket.join(data.roomId);
+
+    var room, user;
+
+    socket.on('join', function (data) {
+        room = data.roomId;
+        user = data.userId;
         
-        console.log(data.roomId + '채팅서버로 join함');
-        
-        socket.get('room', function(err, room){
-            io.sockets.in(room).emit('join', data.userId);
-        });
-        
+        socket.join(room);
+
+        console.log(user + '<-id/room->' + room + ' 채팅서버로 join함');
+
+        io.sockets.in(room).emit('login', user);
     });
-    
-    socket.on('message', function(message){
-        socket.get('room', function(error, room){
-            io.sockets.in(room).emit('message', message);
-        });
+
+    socket.on('say', function (msg) {
+        console.log(user + '님이 ' + room + '번 채팅방에 메시지 보냄: ' + msg);
+        io.sockets.in(room).emit('my_message', msg);
+        socket.broadcast.to(room).emit('message', msg, user);
+
     });
-    
-    socket.on('disconnect', function(){
-        
+
+    socket.on('disconnect', function () {
+
     });
-    
+
 })

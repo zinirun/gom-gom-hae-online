@@ -2,207 +2,127 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 
-body{
-    background: #FFE5BA;
-    font-family: 'Jua', sans-serif;
-    color: #524226;
-    font-size: 23px;
+body {
+    background: #734114;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    color: white;
 }
 
-.screen{
+.screen {
     width: 100%;
     text-align: center;
 }
 
-.box{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    overflow: hidden;
-    margin-top: -300px;
-    margin-left: -275px;
+.mainview {
     display: inline-block;
-    width: 500px;
-    height: 400px;
-    background: #EFCF98;
-    border-radius: 20px;
-    border: 3px solid #c9af81;
-    padding: 1.5rem;
-}
-
-div .logo{
-    margin: 20px 0 20px 0;
-    font-size: 45px;
-    font-weight: 800;
-}
-
-input[type="text"]{
-    width: 300px;
-    padding: 0.5rem;
-    font-family: inherit;
-    font-size: 35px;
-    text-align: center;
-    border: 2px solid #c9af81;
-    border-radius: 15px;
-}
-
-input[type="submit"]{
-    cursor: pointer;
-    color: #524329;
-    margin-top: 10px;
-    width: 200px;
-    padding: 0.5rem;
-    font-family: inherit;
-    font-size: 30px;
-    background: #c9af81;
+    padding: 2rem 2rem 2rem 2.5rem;
+    margin-top: 240px;
     border: 2px solid white;
     border-radius: 10px;
 }
 
-/*room*/
-.line{
-    border: 1px solid #635235;
+.logo {
+    text-align: left;
+    font-size: 40px;
+    font-weight: 700;
 }
 
-input[type="button"],
-input[name="makegame"]{
-    margin-left: 10px;
-    cursor: pointer;
-    color: #524329;
-    margin-top: 10px;
-    width: 150px;
-    padding: 0.3rem 0.5rem 0.2rem;
-    font-family: inherit;
-    font-size: 24px;
-    background: #c9af81;
-    border: 2px solid white;
-    border-radius: 10px;
+.logo_semi {
+    margin-top: -15px;
+    text-align: left;
+    font-size: 40px;
+    font-weight: 200;
 }
 
-table{
-    width: 100%;
-    margin-top: 15px;
-    border-spacing: 0px;
-}
-
-.listtitle{
-    font-size: 21px;
-    font-weight: 600;
-}
-
-.listtable tr{
-    cursor: pointer;
-}
-
-.listeach{
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-}`
-
-/*makeroom*/
-.maketable{
-    border: 2px solid  #524226;
-    border-radius: 10px;
-    padding: 1rem 1rem 1rem 0;
-}
-
-.makelist{
-    padding: 0.7rem;
-    font-size: 25px;
-}
-
-td .input_make{
-    width: 300px;
-    padding: 0.3rem;
-    font-family: inherit;
-    font-size: 25px;
-    text-align: center;
-    border: 2px solid #c9af81;
-    border-radius: 15px;
-}
-
-.wrap_center{
-    display: inline-block;
-}
-
-/*ready*/
-input[name="chat_text"]{
-    color: #524226;
-    margin-top: -5px;
-    width: 400px;
-    padding: 0.5rem;
-    font-family: inherit;
-    font-size: 20px;
-    text-align: center;
-    background: #FFEDCF;
-    border: 2px solid #c9af81;
-    border-radius: 0 0 10px 10px;
-}
-
-.text_info{
-    font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-}
-
-.text_vs{
-    font-weight: 800;
-    font-size: 30px;
-}
-
-/*gamebox*/
-
-.gamebox{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    overflow: hidden;
-    margin-top: -340px;
-    margin-left: -425px;
-    display: inline-block;
-    width: 800px;
-    height: 600px;
-    background: #EFCF98;
-    border-radius: 20px;
-    border: 3px solid #c9af81;
-    padding: 1.5rem;
-}
-
-input[name="viewQuiz"]{
-    color: #524226;
-    margin-top: 15px;
-    width: 350px;
-    padding: 0.6rem;
-    font-family: inherit;
-    font-size: 35px;
-    text-align: center;
-    background: #FFEDCF;
-    border: 2px solid #c9af81;
-    border-radius: 15px 15px 0 0;
-}
-
-input[name="viewMean"]{
-    color: #524226;
-    margin-top: -1px;
-    width: 363px;
-    padding: 0.2rem;
-    font-family: inherit;
+.text_info {
     font-size: 18px;
-    text-align: center;
-    background: #FFEDCF;
-    border: 2px solid #c9af81;
-    border-radius: 0 0 15px 15px;
+    font-weight: 500;
+    color: #BE7F46;
 }
 
-input[name="getAnswer"]{
-    color: #524226;
-    margin-top: 15px;
-    width: 350px;
-    padding: 0.6rem;
-    font-family: inherit;
-    font-size: 35px;
+form[name="setUser"] {
+    margin-top: 10px;
+}
+
+input[name="nickname"] {
+    background: white;
+    height: 40px;
+    font-size: 28px;
+    padding: 0.7rem;
+    border-radius: 10px;
+    border-style: none;
+}
+
+input[name="login"] {
+    cursor: pointer;
+    background: inherit;
+    height: 40px;
+    font-size: 40px;
+    font-weight: 500;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    border-style: none;
+}
+
+/*GAME.HTML*/
+
+.gameview {
+    background: white;
+    display: inline-block;
+    width: 530px;
+    padding: 2rem;
+    margin-top: 100px;
+    border-radius: 30px 30px 0 0
+}
+
+.userchain {
+    background: #EEAE73;
+    display: inline-block;
+    padding: 1rem;
+    border-radius: 10px;
+    color: #41260E;
+    margin: 10px;
+}
+
+.answer {
+    width: 120px;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.usernick {
+    border-top: 2px solid #BC8656;
+    width: 120px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.mychat {
+    margin-top: -5px;
+    background: white;
+    display: inline-block;
+    width: 530px;
+    padding: 2rem;
+    border-radius: 0 0 30px 30px;
+    border-top: 5px solid #734114;
+}
+
+input[name="myanswer"] {
+    background: #EEAE73;
+    color: #41260E;
+    width: 180px;
+    height: 40px;
+    font-size: 45px;
+    font-weight: 700;
     text-align: center;
-    border: 2px solid #c9af81;
-    border-radius: 15px;
+    padding: 1.3rem 1rem;
+    border-radius: 10px;
+    border-style: none;
+}
+
+li{
+    list-style: none;
 }
