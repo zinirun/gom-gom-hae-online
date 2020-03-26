@@ -38,6 +38,9 @@ app.use(expressSession({
 }));
 app.use(cors());
 
+var userId;
+var roomId = 1;
+
 var router = express.Router();
 
 //MainPage 라우터
@@ -61,14 +64,14 @@ router.route('/').get(function (req, res) {
 router.route('/process/login').post(function (req, res) {
     console.log('로그인 라우터 호출됨');
 
-    var paramId = req.body.nickname;
+    userId = req.body.nickname;
 
     if (req.session.user) {
         console.log('유저정보 존재 - 게임 이동');
         res.redirect('/process/game');
     } else {
         req.session.user = {
-            id: paramId,
+            id: userId,
             authorized: true
         };
         res.redirect('/process/game');
@@ -80,8 +83,6 @@ router.route('/process/game/').get(function (req, res) {
     console.log('게임 입장 라우터 호출됨');
     if (req.session.user) {
         //채팅 서버 입장
-        var userId = req.session.user.id;
-        var roomId = 1;
         fs.readFile('./public/game.html', 'utf8', function (error, data) {
             console.log(req.session.user.id + ":id로 렌더링");
             res.send(ejs.render(data, {
@@ -140,29 +141,29 @@ http.listen(app.get('port'),
 io.on('connection', function (socket) {
 
     console.log('채팅 서버 연결됨');
-
-    var room, user;
-
+    var room;
+    var user = userId || socket.id;
+    
     socket.on('join', function (data) {
         room = data.roomId;
-        user = data.userId;
         
         socket.join(room);
-
+        
         console.log(user + '<-id/room->' + room + ' 채팅서버로 join함');
 
         io.sockets.in(room).emit('login', user);
     });
 
-    socket.on('say', function (msg) {
+    socket.on('answer', function (msg) {
         console.log(user + '님이 ' + room + '번 채팅방에 메시지 보냄: ' + msg);
-        io.sockets.in(room).emit('my_message', msg);
-        socket.broadcast.to(room).emit('message', msg, user);
-
+        
+        io.sockets.in(room).emit('answer', user, msg);
     });
 
     socket.on('disconnect', function () {
-
+        console.log("서버 연결 종료됨");
+        gServer.splice(gServer.indexOf(userId), 1);
+        
     });
 
-})
+});

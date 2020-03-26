@@ -26,32 +26,26 @@
             $('#ansForm').submit(function() {
                 if ($('#m').val() != "") {
                     var chatData = $('#m').val();
-                    socket.emit('say', chatData, data.userId);
+                    socket.emit('answer', chatData, data.userId);
                     $('#m').val('');
                 }
                 return false;
             });
-            
-            socket.on('my_message', function(msg) {
-                //해당 유저체인에 메시지(3글자) 삽입
-                var msgTarget = "#answer_" + data.userId;
-                $(msgTarget).append(msg);
-            });
 
-            socket.on('message', function(msg, user) {
-                //해당 유저체인에 메시지(3글자) 삽입
-                var msgTarget = "#answer_" + user;
-                $(msgTarget).append(msg);
+            socket.on('answer', function(nickname, answer) {
+                //워드체인에 메시지(3글자) 삽입
+                var msgTarget = "#answer_" + data.userId;
+                $('#chain').append('<div class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
             });
 
             socket.on('login', function(nickname) {
-                //유저체인 삽입 (새 유저)
-                $('#chain').append('<div class="userchain"> <div class="answer" id="answer_' + nickname + '"> </div> <div class="usernick">' + nickname + '</div></div>')
+                //유저목록 삽입 (새 유저)
+                $('.mychat').append('<div class="username">' + nickname + '</div>');
             });
 
             socket.on('logout', function(received) {
 
-            })
+            });
         })
 
     </script>
@@ -61,17 +55,7 @@
     <div class="screen">
         <div class="gameview">
             <div id="chain">
-                <!--한명 체인 시작-->
-                <div class="userchain">
-                    <div class="answer" id="answer">
-                        <!--채팅은 여기에 넣음-->무지개
-                    </div>
-                    <div class="usernick">
-                        <!--닉네임은 여기에 넣음-->
-                        곰돌이샘플
-                    </div>
-                </div>
-                <!--한명 체인 끝-->
+                <!--WORD CHAIN-->
             </div>
         </div>
         <br />
@@ -82,6 +66,11 @@
             <form id="ansForm" action="">
                 <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
             </form>
+            <div class="text_info">
+                <p>게임중인 유저</p>
+            </div>
+            <hr width="80%" style="border-color: sandybrown;">
+            <div id="userList"></div>
         </div>
     </div>
 
