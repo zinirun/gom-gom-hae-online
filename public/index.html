@@ -21,7 +21,13 @@
                 <input type="text" name="nickname" maxlength="6" autocomplete="off">
                 <input type="submit" name="login" value="↵">
             </form>
-            <div class="text_info"><p>닉네임(6자 이하)을 정하고 바로 게임에 입장하세요!</p></div>
+            <div class="text_info"><p>닉네임(6자 이하)을 정하고 바로 게임에 입장하세요!</p>
+            <p style="color: yellow; margin-bottom: -10px;">
+            <%if(locals.msg){%>
+                <%=msg%>
+            <%}%>
+            </p>
+            </div>
         </div>
     </div>
 </body>

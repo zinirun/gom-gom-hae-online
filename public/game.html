@@ -14,6 +14,7 @@
         //USER's DATA
         data.roomId = '<%= roomId %>';
         data.userId = '<%= userId %>';
+        var socketId = "";
 
         $(function() {
             $('#m').focus();
@@ -38,13 +39,20 @@
                 $('#chain').append('<div class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
             });
 
-            socket.on('login', function(nickname) {
-                //유저목록 삽입 (새 유저)
-                $('.mychat').append('<div class="username">' + nickname + '</div>');
+            socket.on('refreshUser', function(userlist) {
+                refreshUserList(userlist);
             });
 
-            socket.on('logout', function(received) {
+            function refreshUserList(onUser){
+                $('#userList').empty();
+                for (var i = 0; i < onUser.length; i++) {
+                    $('#userList').append('<div class="username">' + onUser[i].userId + '</div>');
+                }
+            }
 
+            $("#logoutBtn").click(function(e) {
+                e.preventDefault();
+                socket.emit('logout'); //로그아웃 정의 필요
             });
         })
 
@@ -53,6 +61,9 @@
 
 <body style="color: black;">
     <div class="screen">
+        <div class="menulist">
+            <input class="gamebutton" id="logoutBtn" type="button" value="게임에서 나가기" onclick="location.href='/process/logout';">
+        </div>
         <div class="gameview">
             <div id="chain">
                 <!--WORD CHAIN-->
@@ -66,11 +77,11 @@
             <form id="ansForm" action="">
                 <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
             </form>
+            <hr width="70%" style="border-color: sandybrown; margin-top: 30px;">
             <div class="text_info">
-                <p>게임중인 유저</p>
+                [서버 <%= roomId %>] 접속중인 유저
             </div>
-            <hr width="80%" style="border-color: sandybrown;">
-            <div id="userList"></div>
+            <div id="userList">사람</div>
         </div>
     </div>
 
