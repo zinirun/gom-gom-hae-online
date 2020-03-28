@@ -15,6 +15,7 @@
         data.roomId = '<%= roomId %>';
         data.userId = '<%= userId %>';
         var socketId = "";
+        var ansColor = "white";
 
         $(function() {
             $('#m').focus();
@@ -34,20 +35,57 @@
             });
 
             socket.on('answer', function(nickname, answer) {
+                //5개 이상이면 첫 자식노드 1개 삭제
+                if($('#chain').children().length > 4){
+                    $("#chain").children().first().remove();
+                }
+                
                 //워드체인에 메시지(3글자) 삽입
-                var msgTarget = "#answer_" + data.userId;
-                $('#chain').append('<div class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+                $('#chain').append('<div style="background:' + ansColor + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+
+                
+                if(nickname == data.userId){
+                    $('.text_answer_info').css('padding', '0');
+                    $('.text_answer_info').html("");
+                }
+            });
+            
+            //내 차례일때만 입력 가능
+            socket.on('turn', function(next_nickname){
+                if(data.userId == next_nickname){
+                    $('#m').attr("disabled", false);
+                    $('#m').focus();
+                }
+                else{
+                    $('#m').attr("disabled", true);
+                    $('#m').focus();
+                }
+            });
+            
+            socket.on('notice', function(nickname, message) {
+                if(nickname == data.userId){
+                    $('.text_answer_info').css('padding', '0.2rem 0.4rem');
+                    $('.text_answer_info').html(message);
+                }
             });
 
             socket.on('refreshUser', function(userlist) {
+                ansColor= makeAnsColor(userlist.length - 1);
                 refreshUserList(userlist);
             });
-
+            
+            
             function refreshUserList(onUser){
                 $('#userList').empty();
-                for (var i = 0; i < onUser.length; i++) {
-                    $('#userList').append('<div class="username">' + onUser[i].userId + '</div>');
+                for (var i in onUser) {
+                    $('#userList').append('<div class="username">' + onUser[i] + '</div>');
                 }
+            }
+            
+            function makeAnsColor(userLength){
+                var colors = ['#ECB257','#CFE674','#96E674','#72E68B','#74CFE6'];
+                
+                return colors[userLength];
             }
 
             $("#logoutBtn").click(function(e) {
@@ -77,11 +115,15 @@
             <form id="ansForm" action="">
                 <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
             </form>
+            
+            <!--단어오류 메시지-->
+            <span class="text_answer_info"></span>
+            
             <hr width="70%" style="border-color: sandybrown; margin-top: 30px;">
             <div class="text_info">
                 [서버 <%= roomId %>] 접속중인 유저
             </div>
-            <div id="userList">사람</div>
+            <div id="userList"></div>
         </div>
     </div>
 

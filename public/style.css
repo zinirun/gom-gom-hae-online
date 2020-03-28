@@ -98,7 +98,7 @@ input[name="login"] {
 }
 
 .usernick {
-    border-top: 2px solid #BC8656;
+    border-top: 2px solid white;
     width: 100px;
     font-size: 16px;
     font-weight: 500;
@@ -148,4 +148,11 @@ li{
     padding: 0.3rem 0.7rem;
     border: 0px;
     border-radius: 7px;
+}
+
+.text_answer_info{
+    background: crimson;
+    font-size: 17px;
+    font-weight: 500;
+    color: white;
 }
