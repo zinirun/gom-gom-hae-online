@@ -1,9 +1,5 @@
-function HighlightRow(obj){
-
-	var table = document.getElementId("listtable_id");
-	var tr = table.getElementsByTagName("tr");
-	for(var i=0; i<tr.length; i++){
-		tr[i].style.background = "white";
-	}
-	obj.style.backgroundColor = "#FCE6E0";
+function logout(){
+    if (confirm("로그아웃 하시겠어요?") == true) {
+        document.location.href = "/process/logout";
+    } else return;
 }

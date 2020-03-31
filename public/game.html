@@ -15,7 +15,7 @@
         data.roomId = '<%= roomId %>';
         data.userId = '<%= userId %>';
         var socketId = "";
-        var ansColor = "white";
+        var userColor = ['#ECB257', '#CFE674', '#96E674', '#72E68B', '#74CFE6'];
 
         $(function() {
             $('#m').focus();
@@ -25,67 +25,84 @@
 
             socket.emit('join', data);
 
+            //단어 입력시
             $('#ansForm').submit(function() {
                 if ($('#m').val() != "") {
-                    var chatData = $('#m').val();
-                    socket.emit('answer', chatData, data.userId);
+                    var ansData = $('#m').val();
+                    socket.emit('answer', ansData, data.userId);
                     $('#m').val('');
                 }
                 return false;
             });
 
-            socket.on('answer', function(nickname, answer) {
+            //채팅 입력시
+            $('#chatForm').submit(function() {
+                if ($('#c').val() != "") {
+                    var chatData = $('#c').val();
+                    socket.emit('chat', chatData, data.userId);
+                    $('#c').val('');
+                }
+                return false;
+            });
+
+            socket.on('answer', function(nickname, answer, userCnt) {
                 //5개 이상이면 첫 자식노드 1개 삭제
-                if($('#chain').children().length > 4){
+                if ($('#chain').children().length > 4) {
                     $("#chain").children().first().remove();
                 }
-                
-                //워드체인에 메시지(3글자) 삽입
-                $('#chain').append('<div style="background:' + ansColor + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
 
-                
-                if(nickname == data.userId){
+                //정답 입력 배경 색 사용자에 맞게 변경
+                if (nickname == data.userId) {
+                    $('#m').css('background', userColor[userCnt]);
+                }
+
+                //워드체인에 메시지(3글자) 삽입
+                $('#chain').append('<div style="background:' + userColor[userCnt] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+
+
+                if (nickname == data.userId) {
                     $('.text_answer_info').css('padding', '0');
                     $('.text_answer_info').html("");
                 }
             });
-            
+
             //내 차례일때만 입력 가능
-            socket.on('turn', function(next_nickname){
-                if(data.userId == next_nickname){
+            socket.on('turn', function(next_nickname) {
+                if (data.userId == next_nickname) {
                     $('#m').attr("disabled", false);
                     $('#m').focus();
-                }
-                else{
+                    $('#ans_msg').html('나의 턴!');
+                    $('#ans_msg').css('color', 'crimson');
+                } else {
                     $('#m').attr("disabled", true);
                     $('#m').focus();
+                    $('#ans_msg').html('상대의 턴이에요.');
+                    $('#ans_msg').css('color', 'green');
                 }
             });
-            
+
             socket.on('notice', function(nickname, message) {
-                if(nickname == data.userId){
+                if (nickname == data.userId) {
                     $('.text_answer_info').css('padding', '0.2rem 0.4rem');
                     $('.text_answer_info').html(message);
                 }
             });
 
             socket.on('refreshUser', function(userlist) {
-                ansColor= makeAnsColor(userlist.length - 1);
                 refreshUserList(userlist);
             });
-            
-            
-            function refreshUserList(onUser){
+
+            socket.on('chatmsg', function(nickname, msg) {
+                //채팅 메시지 삽입
+                $('#chatlog').append('<li><b>' + nickname + '</b>: ' + msg);
+                $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
+            });
+
+            function refreshUserList(onUser) {
                 $('#userList').empty();
                 for (var i in onUser) {
                     $('#userList').append('<div class="username">' + onUser[i] + '</div>');
                 }
-            }
-            
-            function makeAnsColor(userLength){
-                var colors = ['#ECB257','#CFE674','#96E674','#72E68B','#74CFE6'];
-                
-                return colors[userLength];
             }
 
             $("#logoutBtn").click(function(e) {
@@ -100,7 +117,7 @@
 <body style="color: black;">
     <div class="screen">
         <div class="menulist">
-            <input class="gamebutton" id="logoutBtn" type="button" value="게임에서 나가기" onclick="location.href='/process/logout';">
+            <input class="gamebutton" id="logoutBtn" type="button" value="게임에서 나가기" onclick="logout();">
         </div>
         <div class="gameview">
             <div id="chain">
@@ -110,20 +127,31 @@
         <br />
         <div class="mychat">
             <div class="text_info">
-                <p>정답을 입력하세요!</p>
+                <p id="ans_msg">첫 단어를 입력하세요!</p>
             </div>
             <form id="ansForm" action="">
                 <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
             </form>
-            
+
             <!--단어오류 메시지-->
             <span class="text_answer_info"></span>
-            
+
             <hr width="70%" style="border-color: sandybrown; margin-top: 30px;">
             <div class="text_info">
                 [서버 <%= roomId %>] 접속중인 유저
             </div>
             <div id="userList"></div>
+        </div>
+
+        <div class="userchat">
+            <div class="userchat_box">
+                <ul id="chatlog">
+                    <li><b>채팅 기록은 서버에 저장됩니다. 바른 말을 사용하여 주세요!</b></li>
+                </ul>
+            </div>
+            <form id="chatForm" action="">
+                <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
+            </form>
         </div>
     </div>
 

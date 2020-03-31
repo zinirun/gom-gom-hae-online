@@ -1,9 +1,10 @@
 {
-  "name": "mytodo",
+  "name": "bearchain",
   "version": "1.0.0",
-  "description": "todolist by zini",
-  "main": "index.js",
+  "description": "BearChain Game by DKU zini",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -20,7 +20,7 @@ body {
     padding: 2rem 2rem 2rem 2.5rem;
     margin-top: 240px;
     border: 2px solid white;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 
 .logo {
@@ -69,7 +69,7 @@ input[name="login"] {
 
 /*GAME.HTML*/
 .menulist{
-    margin-top: 100px;
+    margin-top: 10px;
 }
 
 .gameview {
@@ -78,8 +78,8 @@ input[name="login"] {
     width: 770px;
     height: 130px;
     padding: 2rem;
-    margin-top: 20px;
-    border-radius: 30px 30px 0 0;
+    margin-top: 10px;
+    border-radius: 10px 10px 0 0;
 }
 
 .userchain {
@@ -118,8 +118,8 @@ input[name="login"] {
     display: inline-block;
     width: 770px;
     padding: 2rem;
-    border-radius: 0 0 30px 30px;
     border-top: 5px solid #734114;
+    border-radius: 0 0 10px 10px;
 }
 
 input[name="myanswer"] {
@@ -132,6 +132,36 @@ input[name="myanswer"] {
     text-align: center;
     padding: 1.3rem 1rem;
     border-radius: 10px;
+    border-style: none;
+}
+
+.userchat{
+    margin-top: 10px;
+    display: inline-block;
+    width: 835px;
+    border-radius: 0 0 30px 30px;
+}
+
+.userchat_box{
+    background: #ffe6bf;
+    height: 180px;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 400;
+    overflow: auto;
+    margin-bottom: -5px;
+    border-radius: 10px 10px 0 0;
+}
+
+input[name="mychatting"] {
+    background: #EEAE73;
+    color: #41260E;
+    width: 771px;
+    height: 20px;
+    font-size: 17px;
+    font-weight: 600;
+    padding: 0.8rem 2rem;
+    border-radius: 0 0 10px 10px;
     border-style: none;
 }
 
@@ -155,4 +185,11 @@ li{
     font-size: 17px;
     font-weight: 500;
     color: white;
+}
+
+#ans_msg{
+    font-size: 18px;
+    color: saddlebrown;
+    font-weight: 600;
+    margin-top: -10px;
 }

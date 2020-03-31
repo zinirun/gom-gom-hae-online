@@ -100,7 +100,6 @@ router.route('/process/game').get(function (req, res) {
                 roomId: roomId
             }));
         });
-
     } else {
         console.log("유저정보 없음 - 메인 이동");
         res.redirect('/');
@@ -133,9 +132,11 @@ app.use('/', router);
 //로그인 시 중복 이름 검사
 function usernameValid(name) {
     for (var i in onUser) {
-        if (onUser[i].userId == name) {
-            return false;
-            break;
+        for (var j in onUser[i]) {
+            if (onUser[i][j] == name) {
+                return false;
+                break;
+            }
         }
     }
     return true;
@@ -160,38 +161,58 @@ http.listen(app.get('port'),
 );
 
 //상황에 맞는 초기화가 관건..!
-var onUser = [[6], []]; //room별 user data, cnt는 length로 계산
+var onUser = []; //room별 user data, cnt는 length로 계산
+var userCnt = []; //room별 user count
 var userWord = [[], []]; //room 별 userword data
 var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
+
+
+for (var i = 0; i < 5; i++) {
+    onUser[i] = new Array();
+}
+
+for (var i = 0; i < 5; i++) {
+    userCnt[i] = 0;
+}
+
 
 io.on('connection', function (socket) {
 
     console.log('채팅 서버 연결됨');
     var room;
+    var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
 
     socket.on('join', function (data) {
         room = data.roomId;
 
         socket.join(room);
-        
-        if (!userCheckDup(onUser, userId)) {
-            console.log("room 유저 수: " + onUser[room].length);
-            onUser[room][onUser[room].length] = user;
+
+        if (userCnt[room] < 1 || !userCnt[room]) {
+            userCnt[room] = 0;
         }
 
-        //for (var i in array)
-        for (var i = 0; i < onUser.length; i++) {
-            console.log(onUser[room][i]);
+        //onUser 배열의 userId 중복 막음
+        if (!userCheckDup(onUser[room], userId)) {
+            console.log("room 유저 삽입");
+
+            onUser[room].push(user);
+
+            if (user == data.userId) {
+                myCnt = userCnt[room];
+                console.log(user + "님의 myCnt: " + myCnt);
+            }
+
+            ++userCnt[room];
         }
 
-        console.log(user + '<-id/room->' + room + ' 채팅서버로 join함');
+        console.log(user + '님 - [' + room + '] 채팅서버로 join함');
 
         io.sockets.in(room).emit('refreshUser', onUser[room]);
     });
 
     //끝말잇기 답 전송
-    socket.on('answer', function (msg) { 
+    socket.on('answer', function (msg) {
         console.log(user + '님이 ' + room + '번 채팅방에 메시지 보냄: ' + msg);
 
         if (wordCnt.length < 1) {
@@ -200,20 +221,21 @@ io.on('connection', function (socket) {
 
         var wordStatus = userWordPush(msg);
         console.log("wordStatus:" + wordStatus);
-        
+
         //다음 단어 턴 사용자 지정, 혼자면 자신으로
-        var next_user = onUser[room][1] || user;
+        var next_user = onUser[room][(myCnt + 1) % userCnt[room]] || user;
+        console.log("다음 턴: " + next_user);
 
         if (wordStatus == 0) {
-            io.sockets.in(room).emit('answer', user, msg);
+            io.sockets.in(room).emit('answer', user, msg, myCnt);
             io.sockets.in(room).emit('turn', next_user);
         } else {
             var warnMsg = "";
 
             if (wordStatus == 1) {
-                warnMsg = "세 글자만 입력하세요!";
+                warnMsg = "2~3 글자만 입력하세요!";
             } else if (wordStatus == 2) {
-                warnMsg = "사용했던 단어에요!";
+                warnMsg = "이미 사용한 단어에요!";
             } else if (wordStatus == 3) {
                 warnMsg = "끝말이 아니에요!";
             } else if (wordStatus == 4) {
@@ -225,32 +247,42 @@ io.on('connection', function (socket) {
         }
     });
 
+    //채팅로그 전송
+    socket.on('chat', function (msg) {
+        io.sockets.in(room).emit('chatmsg', user, msg);
+    });
+
     //유저 0명일때 userWord, wordCnt 초기화 필요
     socket.on('disconnect', function () {
         console.log(user + "님 서버 연결 종료됨");
         if (!socket.id) return;
-        console.log(onUser[room].length||0 + "명 접속중")
-        if (onUser[room].length||0 < 1) {
-            console.log("room 인원 0명 -> 단어 DB 초기화");
-            word_n_cnt_reset(userWord, wordCnt);
+
+        if (onUser[room]) {
+            userDelete(onUser, user);
+            --userCnt[room];
         }
-        userDelete(onUser, user);
+
+        console.log(user + " : 유저 삭제완료");
+        console.dir(onUser);
+
+        if (userCnt[room] < 1 || !userCnt[room]) {
+            console.log("room 인원 0명 -> 단어 DB 초기화: " + userCnt[room]);
+            if (userWord[room]) {
+                word_n_cnt_reset(userWord, wordCnt);
+            }
+        }
         io.sockets.in(room).emit('refreshUser', onUser);
     });
 
     function word_n_cnt_reset(uw, wc) {
-        for (var i in uw) {
-            if (uw[i].roomId == room) {
-                uw.pop();
-            }
-        }
-        wc[room] = 0;
+        uw[room].length = 0; //userWord 초기화
+        wc[room] = 0; //wordCnt 초기화
     }
 
-    function userCheckDup(userlist, id) {
+    function userCheckDup(userlist, id) { //onUser[room]으로 넘김
         var check = 0; //0: 중복X
-        for(var i in onUser){
-            if(onUser[room][i] == id){
+        for (var i in userlist) {
+            if (userlist[i] == id) {
                 check = 1;
                 break;
             }
@@ -258,10 +290,11 @@ io.on('connection', function (socket) {
         return check;
     }
 
-    function userDelete(array, id) {
-        for(var i in array){
-            if(array[room][i] == id){
-                array.splice(i,1);
+    function userDelete(userlist, id) { //onUser[room]으로 넘김
+        for (var i in userlist) {
+            if (userlist[room][i] == id) {
+                userlist[room].splice(i, 1)
+                break;
             }
         }
     }
@@ -276,7 +309,7 @@ io.on('connection', function (socket) {
 
             console.log("userWord 추가완료 : " + userWord[room][wordCnt[room]]);
 
-            wordCnt[room]++; //단어 cnt 증가
+            ++wordCnt[room]; //단어 cnt 증가
             return stat;
 
         } else { //불통과
@@ -290,7 +323,7 @@ io.on('connection', function (socket) {
         var cnt = wordCnt[room];
         console.log("wordcount: " + cnt);
 
-        if (word.length != 3) {
+        if (word.length > 3 || word.length < 2) {
             ansCheck = 1;
             return ansCheck;
         }
@@ -316,7 +349,6 @@ io.on('connection', function (socket) {
     }
 
     function isAnswerUsed(word) {
-        console.log("isAnswerUsed 호출");
         var check = 0; //0이면 통과
         for (var i in userWord[room]) {
             if (userWord[room][i].includes(word)) {
@@ -328,7 +360,6 @@ io.on('connection', function (socket) {
     }
 
     function isAnswerFinalword(word) {
-        console.log("isAnswerFinalword 호출");
         var check = 1; //0이면 통과
 
         //신규 단어(word) 첫말 = 이전 단어 끝말 체크
@@ -340,11 +371,9 @@ io.on('connection', function (socket) {
     }
 
     function isAnswerInDict(word) {
-        console.log("isAnswerInDict 호출");
         var check = 1; //0이면 통과
         for (var i in dict) {
             if (dict[i] == word) {
-                console.log("단어사전에 포함된 단어:" + word);
                 check = 0;
                 break;
             }
