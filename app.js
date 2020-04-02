@@ -38,13 +38,10 @@ var router = express.Router();
 
 //MainPage 라우터
 router.route('/').get(function (req, res) {
-    console.log('mainpage 호출됨');
 
     if (req.session.user) {
-        console.log('유저정보 존재 - 게임 이동');
         res.redirect('/process/game');
     } else {
-        console.log("유저정보 없음 - 메인 이동");
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {}));
         });
@@ -53,12 +50,9 @@ router.route('/').get(function (req, res) {
 
 //메인 로그인 라우터
 router.route('/process/login').post(function (req, res) {
-    console.log('로그인 라우터 호출됨');
-
     userId = req.body.nickname;
 
     if (req.session.user) {
-        console.log('유저정보 존재 - 게임 이동');
         res.redirect('/process/game');
     } else {
         if (userId.length < 2) {
@@ -91,7 +85,6 @@ router.route('/process/login').post(function (req, res) {
 
 //게임 입장 라우터
 router.route('/process/game').get(function (req, res) {
-    console.log('게임 입장 라우터 호출됨');
     if (req.session.user) {
         //채팅 서버 입장
         fs.readFile('./public/game.html', 'utf8', function (error, data) {
@@ -101,19 +94,16 @@ router.route('/process/game').get(function (req, res) {
             }));
         });
     } else {
-        console.log("유저정보 없음 - 메인 이동");
         res.redirect('/');
     }
 });
 
 //로그아웃 라우터
 router.route('/process/logout').get(function (req, res) {
-    console.log('/process/logout 호출됨');
     if (req.session.user) {
-        console.log('로그아웃함');
         req.session.destroy(function (err) {
             if (err) throw err;
-            console.log('세션 삭제하고 로그아웃됨');
+            console.log('세션 삭제하고 로그아웃됨.');
             fs.readFile('./public/index.html', 'utf8', function (error, data) {
                 res.send(ejs.render(data, {
                     msg: '로그아웃 되었습니다.'
@@ -121,7 +111,6 @@ router.route('/process/logout').get(function (req, res) {
             });
         });
     } else {
-        console.log('로그인 상태 아님');
         res.redirect('/process/game');
     }
 });
@@ -178,7 +167,7 @@ for (var i = 0; i < 5; i++) {
 
 io.on('connection', function (socket) {
 
-    console.log('채팅 서버 연결됨');
+    console.log('[SOCKET.IO] 채팅 서버 연결됨');
     var room;
     var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
@@ -194,9 +183,11 @@ io.on('connection', function (socket) {
 
         //onUser 배열의 userId 중복 막음
         if (!userCheckDup(onUser[room], userId)) {
-            console.log("room 유저 삽입");
+            console.log("room 유저 삽입됨");
 
             onUser[room].push(user);
+            
+            console.dir(onUser);
 
             if (user == data.userId) {
                 myCnt = userCnt[room];
@@ -213,14 +204,11 @@ io.on('connection', function (socket) {
 
     //끝말잇기 답 전송
     socket.on('answer', function (msg) {
-        console.log(user + '님이 ' + room + '번 채팅방에 메시지 보냄: ' + msg);
-
         if (wordCnt.length < 1) {
             wordCnt[room] = 0;
         }
 
         var wordStatus = userWordPush(msg);
-        console.log("wordStatus:" + wordStatus);
 
         //다음 단어 턴 사용자 지정, 혼자면 자신으로
         var next_user = onUser[room][(myCnt + 1) % userCnt[room]] || user;
@@ -266,7 +254,7 @@ io.on('connection', function (socket) {
         console.dir(onUser);
 
         if (userCnt[room] < 1 || !userCnt[room]) {
-            console.log("room 인원 0명 -> 단어 DB 초기화: " + userCnt[room]);
+            console.log("room 인원 0명 -> 단어 DB 초기화, userCnt: " + userCnt[room]);
             if (userWord[room]) {
                 word_n_cnt_reset(userWord, wordCnt);
             }
@@ -293,7 +281,7 @@ io.on('connection', function (socket) {
     function userDelete(userlist, id) { //onUser[room]으로 넘김
         for (var i in userlist) {
             if (userlist[room][i] == id) {
-                userlist[room].splice(i, 1)
+                userlist[room].splice(i, 1);
                 break;
             }
         }
