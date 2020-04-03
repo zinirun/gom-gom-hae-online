@@ -14,7 +14,7 @@
         //USER's DATA
         data.roomId = '<%= roomId %>';
         data.userId = '<%= userId %>';
-        
+
         var socketId = "";
         var userColor = ['#ECB257', '#CFE674', '#96E674', '#72E68B', '#74CFE6'];
 
@@ -46,7 +46,9 @@
                 return false;
             });
 
-            socket.on('answer', function(nickname, answer, userCnt) {
+            socket.on('answer', function(nickname, answer, userCnt, can) {
+                $('#m').attr("placeholder", can);
+                
                 //5개 이상이면 첫 자식노드 1개 삭제
                 if ($('#chain').children().length > 4) {
                     $("#chain").children().first().remove();
@@ -77,7 +79,7 @@
                 } else {
                     $('#m').attr("disabled", true);
                     $('#m').focus();
-                    $('#ans_msg').html(next_nickname+'님의 턴!');
+                    $('#ans_msg').html(next_nickname + '님의 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
             });

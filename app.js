@@ -11,8 +11,12 @@ var io = require('socket.io')(http),
     expressSession = require('express-session'),
     ejs = require('ejs'),
     fs = require('fs'),
+    hangul = require('hangul-tools'),
+    makeHangul = require('hangul-js'),
     url = require('url'), //채팅 모듈
     cors = require('cors'); //ajax 요청시 cors 지원
+
+var dooum = require('./routes/dooumRule').dooum;
 
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.urlencoded({
@@ -186,7 +190,7 @@ io.on('connection', function (socket) {
             console.log("room 유저 삽입됨");
 
             onUser[room].push(user);
-            
+
             console.dir(onUser);
 
             if (user == data.userId) {
@@ -215,7 +219,16 @@ io.on('connection', function (socket) {
         console.log("다음 턴: " + next_user);
 
         if (wordStatus == 0) {
-            io.sockets.in(room).emit('answer', user, msg, myCnt);
+            
+            var alsoWord = dooum(userWord[room][wordCnt], userWord, room, wordCnt);
+            var canWord;
+            if(alsoWord.length > 1){
+                canWord = userWord[room][wordCnt[room] - 1].slice(-1) + "(" + alsoWord.slice(-1) + ")";
+            } else{
+                canWord = userWord[room][wordCnt[room] - 1].slice(-1);
+            }
+            
+            io.sockets.in(room).emit('answer', user, msg, myCnt, canWord);
             io.sockets.in(room).emit('turn', next_user);
         } else {
             var warnMsg = "";
@@ -347,12 +360,23 @@ io.on('connection', function (socket) {
         return check;
     }
 
+
     function isAnswerFinalword(word) {
         var check = 1; //0이면 통과
-
-        //신규 단어(word) 첫말 = 이전 단어 끝말 체크
-        if (userWord[room][wordCnt[room] - 1].slice(-1) === word.charAt(0)) {
-            check = 0;
+        var alsoWord = dooum(word, userWord, room, wordCnt); //이전 단어 두음적용
+        if (alsoWord.length > 1) { //두음법칙 대상인 경우
+            if (alsoWord.slice(-1) === word.charAt(0)) {
+                check = 0;
+            }
+            //신규 단어(word) 첫말 = 이전 단어 끝말 체크
+            if (userWord[room][wordCnt[room] - 1].slice(-1) === word.charAt(0)) {
+                check = 0;
+            }
+            
+        } else { //두음법칙 대상아닌 경우
+            if (userWord[room][wordCnt[room] - 1].slice(-1) === word.charAt(0)) {
+                check = 0;
+            }
         }
 
         return check;

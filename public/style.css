@@ -37,6 +37,7 @@ body {
 }
 
 .text_info {
+    margin-top: -5px;
     font-size: 18px;
     font-weight: 500;
     color: #BE7F46;
