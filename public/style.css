@@ -205,3 +205,26 @@ li{
     border-bottom: 5px solid crimson;
     margin-bottom: 5px;
 }
+
+.hide_win{
+    display: none;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 770px;
+    height: 250px;
+    overflow: hidden;
+    margin-top: -195px;
+    margin-left: -385px;
+    border-radius: 20px;
+    border-top: 10px solid dodgerblue;
+    border-bottom: 10px solid dodgerblue;
+}
+
+.win_text{
+    color: dodgerblue;
+    font-size: 140px;
+    font-weight: 600;
+
+}

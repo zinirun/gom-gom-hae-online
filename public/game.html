@@ -111,14 +111,14 @@
 
                     $('#m').attr("disabled", false);
                     $('#m').focus();
-                    $('#ans_msg').html('나의 턴!');
+                    $('#ans_msg').html('나의 '+(turnCnt+1)+'번째 턴!');
                     $('#ans_msg').css('color', 'crimson');
 
                 } else {
 
                     $('#m').attr("disabled", true);
                     $('#m').focus();
-                    $('#ans_msg').html(next_nickname + '님의 턴!');
+                    $('#ans_msg').html(next_nickname + '님의 '+(turnCnt+1)+'번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
             }
@@ -183,20 +183,21 @@
 
 
                 if (!listcheck(onUserList, prev_onUserList)) {
-
                     //dupList(onUserList, prev_onUserList);
                     onUserList = prev_onUserList.slice();
 
                     userCnt = onUserList.length;
-                    alert("userCnt/turnCnt: "+userCnt+"/"+turnCnt);
 
                     //혼자인 경우 제외 - 1명 남으면 승리
-                    if (userCnt == 1 && turnCnt > 1) {
+                    if (onUserList.length <= 1 && turnCnt > 1) {
                         $('#m').attr("disabled", true);
-                        alert("나의 승리!");
+                        $('#hide_win').css("display", "inline-block");
+                        setTimeout(function(){
+                            window.location.href = "/process/winner"
+                        },5000);
                     }
 
-                    $('#chatlog').append('<li style="color:crimson"><b>유저의 변화로 새로운 게임을 시작합니다.</b>');
+                    $('#chatlog').append('<li style="color:crimson"><b>유저의 변화를 감지했습니다. 새로운 게임을 시작합니다!</b>');
                     $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
 
                     newGame(onUserList);
@@ -273,6 +274,20 @@
             <form id="chatForm" action="">
                 <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
             </form>
+        </div>
+        
+        <div class="hide_win" id="hide_win">
+            <div class="finish_box">
+                <div class="win_text">WINNER!</div>
+                <div class="text_info" style="color: dodgerblue;">5초 후 메인으로 돌아갑니다!</div>
+            </div>
+        </div>
+        
+        <div class="hide_win" id="hide_lose" style="border-color: crimson">
+            <div class="finish_box">
+                <div class="win_text" style="color: crimson">LOSE!</div>
+                <div class="text_info" style="color: crimson;">잠시 후 메인으로 돌아갑니다!</div>
+            </div>
         </div>
     </div>
 

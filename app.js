@@ -136,6 +136,23 @@ router.route('/process/gameover').get(function (req, res) {
     }
 });
 
+//게임오버 라우터
+router.route('/process/winner').get(function (req, res) {
+    if (req.session.user) {
+        req.session.destroy(function (err) {
+            if (err) throw err;
+            console.log('세션 삭제하고 로그아웃됨.');
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    msg: '승리! 다시 승리자가 되어보세요!'
+                }));
+            });
+        });
+    } else {
+        res.redirect('/process/game');
+    }
+});
+
 // 라우터 끝
 app.use('/', router);
 
