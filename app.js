@@ -119,6 +119,23 @@ router.route('/process/logout').get(function (req, res) {
     }
 });
 
+//게임오버 라우터
+router.route('/process/gameover').get(function (req, res) {
+    if (req.session.user) {
+        req.session.destroy(function (err) {
+            if (err) throw err;
+            console.log('세션 삭제하고 로그아웃됨.');
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    msg: '게임 오버! 다시 입장하세요.'
+                }));
+            });
+        });
+    } else {
+        res.redirect('/process/game');
+    }
+});
+
 // 라우터 끝
 app.use('/', router);
 
@@ -219,15 +236,15 @@ io.on('connection', function (socket) {
         console.log("다음 턴: " + next_user);
 
         if (wordStatus == 0) {
-            
+
             var alsoWord = dooum(userWord[room][wordCnt], userWord, room, wordCnt);
             var canWord;
-            if(alsoWord.length > 1){
+            if (alsoWord.length > 1) {
                 canWord = userWord[room][wordCnt[room] - 1].slice(-1) + "(" + alsoWord.slice(-1) + ")";
-            } else{
+            } else {
                 canWord = userWord[room][wordCnt[room] - 1].slice(-1);
             }
-            
+
             io.sockets.in(room).emit('answer', user, msg, myCnt, canWord);
             io.sockets.in(room).emit('turn', next_user);
         } else {
@@ -372,7 +389,7 @@ io.on('connection', function (socket) {
             if (userWord[room][wordCnt[room] - 1].slice(-1) === word.charAt(0)) {
                 check = 0;
             }
-            
+
         } else { //두음법칙 대상아닌 경우
             if (userWord[room][wordCnt[room] - 1].slice(-1) === word.charAt(0)) {
                 check = 0;

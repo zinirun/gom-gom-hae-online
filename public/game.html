@@ -15,10 +15,13 @@
         data.roomId = '<%= roomId %>';
         data.userId = '<%= userId %>';
 
+        var curUser;
         var socketId = "";
         var userColor = ['#ECB257', '#CFE674', '#96E674', '#72E68B', '#74CFE6'];
 
         $(function() {
+            var timeover = 5000;
+
             $('#m').focus();
 
             //socket io
@@ -48,7 +51,7 @@
 
             socket.on('answer', function(nickname, answer, userCnt, can) {
                 $('#m').attr("placeholder", can);
-                
+
                 //5개 이상이면 첫 자식노드 1개 삭제
                 if ($('#chain').children().length > 4) {
                     $("#chain").children().first().remove();
@@ -69,20 +72,53 @@
                 }
             });
 
-            //내 차례일때만 입력 가능
+            //턴 넘기기, 내 차례일때만 입력 가능, 시간제한 구현
+            //wordCnt에 따른 timeover(시간제한) 감소
             socket.on('turn', function(next_nickname) {
+                
+                curUser = next_nickname;
+                
+                viewtime = timeover; //reset
+                timebarPx = 210;
+
                 if (data.userId == next_nickname) {
+
                     $('#m').attr("disabled", false);
                     $('#m').focus();
                     $('#ans_msg').html('나의 턴!');
                     $('#ans_msg').css('color', 'crimson');
+
                 } else {
+
                     $('#m').attr("disabled", true);
                     $('#m').focus();
                     $('#ans_msg').html(next_nickname + '님의 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
             });
+
+            var viewtime = timeover;
+            var timebarPx = 210;
+
+            const tick = () => {
+
+                $('#timeBar').html((viewtime / 1000).toFixed(1));
+                $('#timeBar').css('width', timebarPx + 'px');
+
+                if (viewtime < 10 && curUser == data.userId) {
+                    clearInterval(start);
+                    window.location.href = "/process/gameover";
+                } else if (viewtime < 10 && curUser != data.userId) {
+                    clearInterval(start);
+                    $('#chatlog').append('<li style="color:crimson"><b>[' + curUser + ']님 게임 오버!</b>');
+                } else {
+                    viewtime -= 100;
+                    timebarPx -= (210 / (timeover / 100));
+                }
+            }
+
+            const start = setInterval(tick, 100);
+
 
             socket.on('notice', function(nickname, message) {
                 if (nickname == data.userId) {
@@ -131,6 +167,7 @@
         <div class="mychat">
             <div class="text_info">
                 <p id="ans_msg">첫 단어를 입력하세요!</p>
+                <div id="timeBar">4.999초</div>
             </div>
             <form id="ansForm" action="">
                 <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">

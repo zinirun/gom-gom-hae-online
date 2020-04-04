@@ -197,3 +197,11 @@ li{
     font-weight: 600;
     margin-top: -10px;
 }
+
+#timeBar{
+    display: inline-block;
+    width: 210px;
+    color: crimson;
+    border-bottom: 5px solid crimson;
+    margin-bottom: 5px;
+}
