@@ -98,7 +98,19 @@
             //턴 넘김 -> turn()
             function keepGame() {
                 curUser = onUserList[++turnCnt % userCnt] || data.userId;
-
+                
+                if(turnCnt > 10){
+                    timeover = 3000;
+                }
+                
+                if(turnCnt > 20){
+                    timeover = 2000;
+                }
+                
+                if(turnCnt > 30){
+                    timeover = 1000;
+                }
+                
                 turn(curUser);
             }
 
