@@ -219,7 +219,9 @@ io.on('connection', function (socket) {
         }
 
         console.log(user + '님 - [' + room + '] 채팅서버로 join함');
-
+        
+        io.sockets.in(room).emit('newUser', user);
+        
         io.sockets.in(room).emit('refreshUser', onUser[room]);
     });
 
@@ -230,10 +232,6 @@ io.on('connection', function (socket) {
         }
 
         var wordStatus = userWordPush(msg);
-
-        //다음 단어 턴 사용자 지정, 혼자면 자신으로
-        var next_user = onUser[room][(myCnt + 1) % userCnt[room]] || user;
-        console.log("다음 턴: " + next_user);
 
         if (wordStatus == 0) {
 
@@ -246,7 +244,7 @@ io.on('connection', function (socket) {
             }
 
             io.sockets.in(room).emit('answer', user, msg, myCnt, canWord);
-            io.sockets.in(room).emit('turn', next_user);
+            //io.sockets.in(room).emit('turn', next_user);
         } else {
             var warnMsg = "";
 
@@ -273,6 +271,7 @@ io.on('connection', function (socket) {
     //유저 0명일때 userWord, wordCnt 초기화 필요
     socket.on('disconnect', function () {
         console.log(user + "님 서버 연결 종료됨");
+        
         if (!socket.id) return;
 
         if (onUser[room]) {
@@ -289,7 +288,8 @@ io.on('connection', function (socket) {
                 word_n_cnt_reset(userWord, wordCnt);
             }
         }
-        io.sockets.in(room).emit('refreshUser', onUser);
+        io.sockets.in(room).emit('refreshUser', onUser[room]);
+        io.sockets.in(room).emit('logout', user);
     });
 
     function word_n_cnt_reset(uw, wc) {
