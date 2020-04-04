@@ -224,6 +224,13 @@ io.on('connection', function (socket) {
         
         io.sockets.in(room).emit('refreshUser', onUser[room]);
     });
+    
+    socket.on('newgame', function(){
+        console.log("SERVER - NEW GAME");
+        if (userWord[room]) {
+                word_n_cnt_reset(userWord, wordCnt);
+        }
+    });
 
     //끝말잇기 답 전송
     socket.on('answer', function (msg) {
