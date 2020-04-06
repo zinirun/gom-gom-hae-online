@@ -181,7 +181,7 @@
 
             //게임오버 - 퇴장
             function getout() {
-                socket.emit('gg');
+                socket.emit('gg'); //서버에 gg 전송 -> usergg
                 window.location.href = "/process/loser";
             }
 
