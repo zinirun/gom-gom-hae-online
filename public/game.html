@@ -63,7 +63,7 @@
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
             });
 
-            socket.on('answer', function(nickname, answer, userCnt, can) {
+            socket.on('answer', function(nickname, answer, userCount, can) {
                 $('#m').attr("placeholder", can);
 
                 //5개 이상이면 첫 자식노드 1개 삭제
@@ -73,17 +73,25 @@
 
                 //정답 입력 배경 색 사용자에 맞게 변경
                 if (nickname == data.userId) {
-                    $('#m').css('background', userColor[userCnt]);
+                    $('#m').css('background', userColor[userCount]);
                 }
 
                 //워드체인에 메시지(3글자) 삽입
-                $('#chain').append('<div style="background:' + userColor[userCnt] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+                $('#chain').append('<div style="background:' + userColor[userCount] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
 
                 keepGame();
 
                 if (nickname == data.userId) {
                     $('.text_answer_info').css('padding', '0');
                     $('.text_answer_info').html("");
+                }
+            });
+
+            socket.on('usergg', function(user, wc) {
+                //최종 승리자(1명) 출력
+                if (user.length <= 2 && wc >= 0 && user[0] == data.userId) {
+                    socket.emit("newgame");
+                    window.location.href = "/process/winner";
                 }
             });
 
@@ -98,19 +106,17 @@
             //턴 넘김 -> turn()
             function keepGame() {
                 curUser = onUserList[++turnCnt % userCnt] || data.userId;
-                
-                if(turnCnt > 10){
+
+                if (turnCnt > 10) {
                     timeover = 3000;
                 }
-                
-                if(turnCnt > 20){
+                if (turnCnt > 20) {
                     timeover = 2000;
                 }
-                
-                if(turnCnt > 30){
+                if (turnCnt > 30) {
                     timeover = 1000;
                 }
-                
+
                 turn(curUser);
             }
 
@@ -123,14 +129,14 @@
 
                     $('#m').attr("disabled", false);
                     $('#m').focus();
-                    $('#ans_msg').html('나의 '+(turnCnt+1)+'번째 턴!');
+                    $('#ans_msg').html('나의 ' + (turnCnt + 1) + '번째 턴!');
                     $('#ans_msg').css('color', 'crimson');
 
                 } else {
 
                     $('#m').attr("disabled", true);
                     $('#c').focus();
-                    $('#ans_msg').html(next_nickname + '님의 '+(turnCnt+1)+'번째 턴!');
+                    $('#ans_msg').html(next_nickname + '님의 ' + (turnCnt + 1) + '번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
             }
@@ -175,7 +181,8 @@
 
             //게임오버 - 퇴장
             function getout() {
-                window.location.href = "/process/gameover";
+                socket.emit('gg');
+                window.location.href = "/process/loser";
             }
 
 
@@ -199,15 +206,6 @@
                     onUserList = prev_onUserList.slice();
 
                     userCnt = onUserList.length;
-
-                    //혼자인 경우 제외 - 1명 남으면 승리
-                    if (onUserList.length <= 1 && turnCnt > 1) {
-                        $('#m').attr("disabled", true);
-                        $('#hide_win').css("display", "inline-block");
-                        setTimeout(function(){
-                            window.location.href = "/process/winner"
-                        },5000);
-                    }
 
                     $('#chatlog').append('<li style="color:crimson"><b>유저의 변화를 감지했습니다. 새로운 게임을 시작합니다!</b>');
                     $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
@@ -286,20 +284,6 @@
             <form id="chatForm" action="">
                 <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
             </form>
-        </div>
-        
-        <div class="hide_win" id="hide_win">
-            <div class="finish_box">
-                <div class="win_text">WINNER!</div>
-                <div class="text_info" style="color: dodgerblue;">5초 후 메인으로 돌아갑니다!</div>
-            </div>
-        </div>
-        
-        <div class="hide_win" id="hide_lose" style="border-color: crimson">
-            <div class="finish_box">
-                <div class="win_text" style="color: crimson">LOSE!</div>
-                <div class="text_info" style="color: crimson;">잠시 후 메인으로 돌아갑니다!</div>
-            </div>
         </div>
     </div>
 

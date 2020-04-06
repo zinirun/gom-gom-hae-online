@@ -212,11 +212,11 @@ li{
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 770px;
-    height: 250px;
+    width: 700px;
+    height: 280px;
     overflow: hidden;
-    margin-top: -195px;
-    margin-left: -385px;
+    margin-top: -240px;
+    margin-left: -350px;
     border-radius: 20px;
     border-top: 10px solid dodgerblue;
     border-bottom: 10px solid dodgerblue;

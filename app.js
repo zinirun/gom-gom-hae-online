@@ -102,6 +102,34 @@ router.route('/process/game').get(function (req, res) {
     }
 });
 
+//승리 라우터
+router.route('/process/winner').get(function (req, res) {
+    if (req.session.user) {
+        //채팅 서버 입장
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                win: userId
+            }));
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
+//패배 라우터
+router.route('/process/loser').get(function (req, res) {
+    if (req.session.user) {
+        //채팅 서버 입장
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                lose: userId
+            }));
+        });
+    } else {
+        res.redirect('/');
+    }
+});
+
 //로그아웃 라우터
 router.route('/process/logout').get(function (req, res) {
     if (req.session.user) {
@@ -111,23 +139,6 @@ router.route('/process/logout').get(function (req, res) {
             fs.readFile('./public/index.html', 'utf8', function (error, data) {
                 res.send(ejs.render(data, {
                     msg: '로그아웃 되었습니다.'
-                }));
-            });
-        });
-    } else {
-        res.redirect('/process/game');
-    }
-});
-
-//게임오버 라우터
-router.route('/process/gameover').get(function (req, res) {
-    if (req.session.user) {
-        req.session.destroy(function (err) {
-            if (err) throw err;
-            console.log('세션 삭제하고 로그아웃됨.');
-            fs.readFile('./public/index.html', 'utf8', function (error, data) {
-                res.send(ejs.render(data, {
-                    msg: '게임 오버! 다시 입장하세요.'
                 }));
             });
         });
@@ -290,6 +301,10 @@ io.on('connection', function (socket) {
     //채팅로그 전송
     socket.on('chat', function (msg) {
         io.sockets.in(room).emit('chatmsg', user, msg);
+    });
+    
+    socket.on('gg', function(){
+       io.sockets.in(room).emit('usergg', onUser[room], wordCnt[room]); 
     });
 
     //유저 0명일때 userWord, wordCnt 초기화 필요

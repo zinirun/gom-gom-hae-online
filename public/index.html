@@ -6,9 +6,25 @@
     <title>곰곰해온라인 :: BearChain</title>
     <script src="/public/module.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="/public/style.css">
+
+    <script>
+        var win = '<%if(locals.win){%><%=win%><%}else{0}%>';
+        var lose = '<%if(locals.lose){%><%=lose%><%}else{0}%>';
+        
+        function win_lose_pop(){
+            if(win.length > 1){
+                document.getElementById("hide_win").style.display = "inline-block";
+            }
+            
+            if(lose.length > 1){
+                document.getElementById("hide_lose").style.display = "inline-block";
+            }
+        }
+    </script>
+
 </head>
 
-<body onload="document.setUser.nickname.focus()">
+<body onload="document.setUser.nickname.focus(); win_lose_pop();">
     <div class="screen">
         <div class="mainview">
             <div class="logo">
@@ -21,15 +37,33 @@
                 <input type="text" name="nickname" maxlength="6" autocomplete="off">
                 <input type="submit" name="login" value="↵">
             </form>
-            <div class="text_info"><p>닉네임(6자 이하)을 정하고 바로 게임에 입장하세요!</p>
-            <p style="color: yellow; margin-bottom: -10px;">
-            <%if(locals.msg){%>
-                <%=msg%>
-            <%}%>
+            <div class="text_info">
+                <p>닉네임(6자 이하)을 정하고 바로 게임에 입장하세요!</p>
+                <p style="color: yellow; margin-bottom: -10px;">
+                    <%if(locals.msg){%>
+                    <%=msg%>
+                    <%}%>
             </p>
             </div>
         </div>
+        
+        <div class="hide_win" id="hide_win">
+            <div class="finish_box">
+                <div class="win_text">WINNER!</div>
+                <span class="text_info" style="color: dodgerblue; cursor:pointer; font-size: 25px;" onclick="location.href = '/'">다시 게임에 참가하기</span>
+                <span class="text_info" style="margin: 0 20px;"></span><span class="text_info" style="color: crimson; cursor:pointer; font-size: 25px;" onclick="location.href = '/process/logout'">그만하기</span>
+            </div>
+        </div>
+
+        <div class="hide_win" id="hide_lose" style="border-color: crimson">
+            <div class="finish_box">
+                <div class="win_text" style="color: crimson;">LOSE!</div>
+                <span class="text_info" style="color: dodgerblue; cursor:pointer; font-size: 25px;" onclick="location.href = '/'">다시 게임에 참가하기</span>
+                <span class="text_info" style="margin: 0 20px;"></span><span class="text_info" style="color: crimson; cursor:pointer; font-size: 25px;" onclick="location.href = '/process/logout'">그만하기</span>
+            </div>
+        </div>
     </div>
+    
 </body>
 
 </html>
