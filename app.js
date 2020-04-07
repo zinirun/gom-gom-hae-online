@@ -247,16 +247,16 @@ io.on('connection', function (socket) {
         }
 
         console.log(user + '님 - [' + room + '] 채팅서버로 join함');
-        
+
         io.sockets.in(room).emit('newUser', user);
-        
+
         io.sockets.in(room).emit('refreshUser', onUser[room]);
     });
-    
-    socket.on('newgame', function(){
+
+    socket.on('newgame', function () {
         console.log("SERVER - NEW GAME");
         if (userWord[room]) {
-                word_n_cnt_reset(userWord, wordCnt);
+            word_n_cnt_reset(userWord, wordCnt);
         }
     });
 
@@ -302,16 +302,26 @@ io.on('connection', function (socket) {
     socket.on('chat', function (msg) {
         io.sockets.in(room).emit('chatmsg', user, msg);
     });
-    
-    socket.on('gg', function(){
-       io.sockets.in(room).emit('usergg', onUser[room], wordCnt[room]); 
+
+    socket.on('gg', function (whodie) {
+        
+        //gg 유저 삭제
+        for(var i in onUser[room]){
+            if(onUser[room][i] == whodie){
+                onUser[room].splice(i,1);
+            }
+        }
+        
+        console.log("GG signal - 남은 user:"+onUser[room]);
+        io.sockets.in(room).emit('keepgame', onUser[room]); //남은 사용자 게임 진행
     });
 
     //유저 0명일때 userWord, wordCnt 초기화 필요
     socket.on('disconnect', function () {
         console.log(user + "님 서버 연결 종료됨");
-        
+
         if (!socket.id) return;
+        socket.leave(room);
 
         if (onUser[room]) {
             userDelete(onUser, user);
@@ -320,6 +330,10 @@ io.on('connection', function (socket) {
 
         console.log(user + " : 유저 삭제완료");
         console.dir(onUser);
+        
+        if (onUser[room].length <= 1 && wordCnt[room] >= 0) {
+            io.sockets.in(room).emit('winner', onUser[room][0]);
+        }
 
         if (userCnt[room] < 1 || !userCnt[room]) {
             console.log("room 인원 0명 -> 단어 DB 초기화, userCnt: " + userCnt[room]);

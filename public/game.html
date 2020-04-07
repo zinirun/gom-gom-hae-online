@@ -23,7 +23,7 @@
         var userColor = ['#ECB257', '#CFE674', '#96E674', '#72E68B', '#74CFE6'];
 
         $(function() {
-            var timeover = 5000;
+            var timeover = 7000;
 
             $('#m').focus();
 
@@ -57,12 +57,14 @@
                 $('#chatlog').append('<li style="color:slateblue"><b>[' + newuser + ']님이 입장하셨습니다!</b>');
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
             });
-
+            
+            //로그아웃 메시지 출력
             socket.on('logout', function(outuser) {
                 $('#chatlog').append('<li style="color:crimson"><b>[' + outuser + ']님이 퇴장하셨습니다.</b>');
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
             });
-
+            
+            //정답 입력 - wordchain 삽입
             socket.on('answer', function(nickname, answer, userCount, can) {
                 $('#m').attr("placeholder", can);
 
@@ -78,7 +80,8 @@
 
                 //워드체인에 메시지(3글자) 삽입
                 $('#chain').append('<div style="background:' + userColor[userCount] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
-
+                
+                //게임 진행(다음 턴)
                 keepGame();
 
                 if (nickname == data.userId) {
@@ -87,34 +90,50 @@
                 }
             });
 
-            socket.on('usergg', function(user, wc) {
-                //최종 승리자(1명) 출력
-                if (user.length <= 2 && wc >= 0 && user[0] == data.userId) {
+            socket.on('winner', function(win) {
+                $('#chatlog').append('<li style="color:slateblue"><b>[' + win + ']님이 최종 승리하셨습니다!</b>');
+                $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
+                
+                //최종 승리자(1명) 출력, winner 라우터 이동
+                if (win == data.userId) {
                     socket.emit("newgame");
                     window.location.href = "/process/winner";
                 }
+                
+                turnCnt = 0;
+                keepGame(); //게임 초기화 후 다시 시작
+            });
+            
+            //gg 발생 시 나머지 user - keepgame, userlist 재정의
+            socket.on('keepgame', function(remain_userlist){
+                onUserList = remain_userlist.splice();
+                
+                keepGame();
+                
+                start = setInterval(tick, 100);
             });
 
             //유저 변화, 새로운 게임 시작
-            function newGame(userlist) {
+            function newGame() {
                 socket.emit("newgame");
-                var first_user = userlist[0];
                 turnCnt = 0;
-                turn(first_user);
+                
+                keepGame();
             }
 
             //턴 넘김 -> turn()
             function keepGame() {
-                curUser = onUserList[++turnCnt % userCnt] || data.userId;
+                
+                curUser = onUserList[turnCnt++ % userCnt] || data.userId;
 
                 if (turnCnt > 10) {
-                    timeover = 3000;
+                    timeover = 5000;
                 }
                 if (turnCnt > 20) {
-                    timeover = 2000;
+                    timeover = 3000;
                 }
                 if (turnCnt > 30) {
-                    timeover = 1000;
+                    timeover = 2000;
                 }
 
                 turn(curUser);
@@ -129,14 +148,14 @@
 
                     $('#m').attr("disabled", false);
                     $('#m').focus();
-                    $('#ans_msg').html('나의 ' + (turnCnt + 1) + '번째 턴!');
+                    $('#ans_msg').html('나의 ' + turnCnt + '번째 턴!');
                     $('#ans_msg').css('color', 'crimson');
 
                 } else {
 
                     $('#m').attr("disabled", true);
                     $('#c').focus();
-                    $('#ans_msg').html(next_nickname + '님의 ' + (turnCnt + 1) + '번째 턴!');
+                    $('#ans_msg').html(next_nickname + '님의 ' + turnCnt + '번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
             }
@@ -152,15 +171,17 @@
                 $('#timeBar').css('width', timebarPx + 'px');
 
                 if (viewtime < 10 && curUser == data.userId) {
-                    clearInterval(start);
+                    
                     getout(); //타임오버 대상 게임오버
+                    
                 } else if (viewtime < 10 && curUser != data.userId) {
-
+                    
                     clearInterval(start);
 
                     if (!curUser) {
                         getout(); //첫 단어 입력 안하면 게임오버처리
                     } else {
+                        socket.emit('gg', curUser);
                         gameover(curUser); //타 사용자에게 게임오버 출력
                     }
 
@@ -170,18 +191,21 @@
                 }
             }
 
-            const start = setInterval(tick, 100);
+            var start = setInterval(tick, 100);
 
             // TIMER PART END //
+            
             //게임오버 chatlog 출력
             function gameover(gguser) {
                 $('#chatlog').append('<li style="color:crimson"><b>[' + gguser + ']님 게임 오버!</b>');
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
+                
+                //게임 재시작하므로 타이머 재시작
+                //start = setInterval(tick, 100);
             }
 
             //게임오버 - 퇴장
             function getout() {
-                socket.emit('gg'); //서버에 gg 전송 -> usergg
                 window.location.href = "/process/loser";
             }
 
@@ -192,7 +216,8 @@
                     $('.text_answer_info').html(message);
                 }
             });
-
+            
+            //유저 변화시 onUserList 교체
             socket.on('refreshUser', function(userlist) {
                 refreshUserList(userlist);
 
