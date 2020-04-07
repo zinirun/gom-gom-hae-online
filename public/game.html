@@ -91,32 +91,18 @@
             });
 
             socket.on('winner', function(win) {
-                $('#chatlog').append('<li style="color:slateblue"><b>[' + win + ']님이 최종 승리하셨습니다!</b>');
-                $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
-
                 //최종 승리자(1명) 출력, winner 라우터 이동
                 if (win == data.userId) {
                     socket.emit("newgame");
                     window.location.href = "/process/winner";
                 }
-
-                turnCnt = 0;
-                keepGame(); //게임 초기화 후 다시 시작
             });
 
             //gg 발생 시 나머지 user - keepgame, userlist 다시 받아옴
             socket.on('keepgame', function(remain_userlist) {
                 onUserList = remain_userlist.splice();
-
-                keepGame(); //궁극적으로 유저마다 keepGame 호출 속도가 다름
-
-                //                //keepgame하면 남은 인원끼리 interval 안맞음..
-                //                viewtime = timeover;
-                //                timebarPx = 210;
-                //                
-                //                start = setInterval(tick, 100);
-                // 당연한 결과 - 소켓 시간이 서로 다를수 있으니까 - 어떻게 동일하게?
-
+                turnCnt = 0;
+                keepGame();
             });
 
 
@@ -203,7 +189,9 @@
                 } else {
                     
                     clearTimer();
+                    
                     $('#timeBar').html("곧 나의 턴!");
+                    $('#timeBar').css('width', '210px');
 
                     $('#m').attr("disabled", true);
                     $('#c').focus();
@@ -216,10 +204,11 @@
                 clearInterval(start);
                 timer_pause = true; //flag
             }
-
+            
+            
             //타 유저에게 게임오버 chatlog 출력
             socket.on('gameover', function(gguser) {
-                $('#chatlog').append('<li style="color:crimson"><b>[' + gguser + ']님 게임 오버!</b>');
+                $('#chatlog').append('<li style="color:crimson"><b>[' + gguser + ']님 게임 오버! 첫 턴부터 게임을 이어갑니다!</b>');
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
             });
 
@@ -254,8 +243,8 @@
 
                     userCnt = onUserList.length;
 
-                    //새 유저 들어왔을 때만 newGame 호출(게임오버 X)
-                    if (isNewGame) {
+                    //새 유저 들어왔을 때만 newGame 호출(gg인 경우 새 게임 X)
+                    if (isNewGame == 1) {
                         $('#chatlog').append('<li style="color:crimson"><b>유저의 변화를 감지했습니다. 새로운 게임을 시작합니다!</b>');
                         $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
 

@@ -250,7 +250,7 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('newUser', user);
 
-        io.sockets.in(room).emit('refreshUser', onUser[room], true);
+        io.sockets.in(room).emit('refreshUser', onUser[room], 1);
     });
 
     socket.on('newgame', function () {
@@ -302,7 +302,8 @@ io.on('connection', function (socket) {
     socket.on('chat', function (msg) {
         io.sockets.in(room).emit('chatmsg', user, msg);
     });
-
+    
+    //한명 게임오버시 처리
     socket.on('gg', function (whodie) {
         
         //gg 유저 삭제
@@ -338,8 +339,9 @@ io.on('connection', function (socket) {
                 word_n_cnt_reset(userWord, wordCnt);
             }
         }
-        io.sockets.in(room).emit('refreshUser', onUser[room], true);
+        
         io.sockets.in(room).emit('logout', user);
+        io.sockets.in(room).emit('refreshUser', onUser[room], 0);
     });
 
     function word_n_cnt_reset(uw, wc) {
