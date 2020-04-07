@@ -306,13 +306,9 @@ io.on('connection', function (socket) {
     socket.on('gg', function (whodie) {
         
         //gg 유저 삭제
-        for(var i in onUser[room]){
-            if(onUser[room][i] == whodie){
-                onUser[room].splice(i,1);
-            }
-        }
+        userDelete(onUser, whodie);
         
-        console.log("GG signal - 남은 user:"+onUser[room]);
+        console.log("GG signal - 남은 user: "+onUser[room]);
         io.sockets.in(room).emit('keepgame', onUser[room]); //남은 사용자 게임 진행
     });
 
