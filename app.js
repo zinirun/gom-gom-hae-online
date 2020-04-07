@@ -250,7 +250,7 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('newUser', user);
 
-        io.sockets.in(room).emit('refreshUser', onUser[room]);
+        io.sockets.in(room).emit('refreshUser', onUser[room], true);
     });
 
     socket.on('newgame', function () {
@@ -308,7 +308,8 @@ io.on('connection', function (socket) {
         //gg 유저 삭제
         userDelete(onUser, whodie);
         
-        console.log("GG signal - 남은 user: "+onUser[room]);
+        console.log(whodie+" GG - 남은 user: "+onUser[room]);
+        io.sockets.in(room).emit('gameover', whodie);
         io.sockets.in(room).emit('keepgame', onUser[room]); //남은 사용자 게임 진행
     });
 
@@ -337,7 +338,7 @@ io.on('connection', function (socket) {
                 word_n_cnt_reset(userWord, wordCnt);
             }
         }
-        io.sockets.in(room).emit('refreshUser', onUser[room]);
+        io.sockets.in(room).emit('refreshUser', onUser[room], true);
         io.sockets.in(room).emit('logout', user);
     });
 

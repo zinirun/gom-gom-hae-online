@@ -130,22 +130,14 @@
                 $('#timeBar').html((viewtime / 1000).toFixed(1));
                 $('#timeBar').css('width', timebarPx + 'px');
 
-                if (viewtime < 10 && curUser == data.userId) {
+                if (viewtime < 10) {
 
                     socket.emit('gg', curUser);
-                    gameover(curUser); //타 사용자에게 게임오버 출력
-                    
-                    getout(); //타임오버 대상 게임오버
+                    getout(curUser); //타임오버 대상 게임오버
 
                 } else if (viewtime < 10 && curUser != data.userId) {
-
-                    clearInterval(start);
-
                     if (!curUser) {
-                        getout(); //첫 단어 입력 안하면 게임오버처리
-                    } else {
-                        socket.emit('gg', curUser);
-                        gameover(curUser); //타 사용자에게 게임오버 출력
+                        getout(data.userId); //첫 단어 입력 안하면 게임오버처리
                     }
 
                 } else {
@@ -209,9 +201,9 @@
                     $('#ans_msg').css('color', 'crimson');
 
                 } else {
-
+                    
                     clearTimer();
-                    $('#timeBar').html("");
+                    $('#timeBar').html("곧 나의 턴!");
 
                     $('#m').attr("disabled", true);
                     $('#c').focus();
@@ -225,18 +217,18 @@
                 timer_pause = true; //flag
             }
 
-            //게임오버 chatlog 출력
-            function gameover(gguser) {
+            //타 유저에게 게임오버 chatlog 출력
+            socket.on('gameover', function(gguser) {
                 $('#chatlog').append('<li style="color:crimson"><b>[' + gguser + ']님 게임 오버!</b>');
                 $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
+            });
 
-                //게임 재시작하므로 타이머 재시작
-                //start = setInterval(tick, 100);
-            }
 
             //게임오버 - 퇴장
-            function getout() {
-                window.location.href = "/process/loser";
+            function getout(gguser) {
+                if (gguser == data.userId) {
+                    window.location.href = "/process/loser";
+                }
             }
 
 
@@ -247,10 +239,8 @@
                 }
             });
 
-            //유저 변화시 onUserList 교체
-            socket.on('refreshUser', function(userlist) {
-
-                var prev_userCnt = onUserList.length || 0;
+            //유저 변화시 onUserList 업데이트
+            socket.on('refreshUser', function(userlist, isNewGame) {
 
                 refreshUserList(userlist);
 
@@ -264,9 +254,8 @@
 
                     userCnt = onUserList.length;
 
-
                     //새 유저 들어왔을 때만 newGame 호출(게임오버 X)
-                    if (userCnt > prev_userCnt) {
+                    if (isNewGame) {
                         $('#chatlog').append('<li style="color:crimson"><b>유저의 변화를 감지했습니다. 새로운 게임을 시작합니다!</b>');
                         $('.userchat_box').scrollTop($(".userchat_box")[0].scrollHeight);
 
