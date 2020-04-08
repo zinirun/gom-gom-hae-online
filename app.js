@@ -36,7 +36,7 @@ app.use(cors());
 let dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, "").split('\n');
 
 var userId;
-var roomId = 1;
+var roomId;
 
 var router = express.Router();
 
@@ -44,7 +44,7 @@ var router = express.Router();
 router.route('/').get(function (req, res) {
 
     if (req.session.user) {
-        res.redirect('/process/game');
+        res.redirect('/process/selectch');
     } else {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {}));
@@ -54,10 +54,11 @@ router.route('/').get(function (req, res) {
 
 //메인 로그인 라우터
 router.route('/process/login').post(function (req, res) {
+    
     userId = req.body.nickname;
 
     if (req.session.user) {
-        res.redirect('/process/game');
+        res.redirect('/process/selectch');
     } else {
         if (userId.length < 2) {
             fs.readFile('./public/index.html', 'utf8', function (error, data) {
@@ -82,14 +83,52 @@ router.route('/process/login').post(function (req, res) {
                 id: userId,
                 authorized: true
             };
-            res.redirect('/process/game');
+            res.redirect('/process/selectch');
         }
     }
 });
 
+
+//메인 -> 채널선택 라우터
+router.route('/process/selectch').get(function (req, res) {
+
+    if (req.session.user) {
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                logined_id: userId
+            }));
+        });
+    } else {
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                msg: '닉네임을 정한 후 채널을 선택하세요!'
+            }));
+        });
+    }
+});
+
+//메인 로그인 라우터
+router.route('/process/enterch/:id').get(function (req, res) {
+
+    if (req.session.user) {
+        
+        roomId = req.params.id;
+        
+        res.redirect('/process/game');
+    } else {
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                msg: '닉네임을 정한 후 채널을 선택하세요!'
+            }));
+        });
+    }
+});
+
+
+
 //게임 입장 라우터
 router.route('/process/game').get(function (req, res) {
-    if (req.session.user) {
+    if (req.session.user && roomId) {
         //채팅 서버 입장
         fs.readFile('./public/game.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
@@ -201,27 +240,26 @@ http.listen(app.get('port'),
 //상황에 맞는 초기화가 관건..!
 var onUser = []; //room별 user data, cnt는 length로 계산
 var userCnt = []; //room별 user count
-var userWord = [[], []]; //room 별 userword data
+var userWord = []; //room 별 userword data
 var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
 
-
-for (var i = 0; i < 5; i++) {
+//Array init
+for(var i=0; i<5; i++){
+    userWord[i] = new Array();
     onUser[i] = new Array();
-}
-
-for (var i = 0; i < 5; i++) {
     userCnt[i] = 0;
 }
 
 
 io.on('connection', function (socket) {
 
-    console.log('[SOCKET.IO] 채팅 서버 연결됨');
+    console.log('[SOCKET.IO] 게임 서버 연결됨');
     var room;
     var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
 
     socket.on('join', function (data) {
+
         room = data.roomId;
 
         socket.join(room);
@@ -246,7 +284,7 @@ io.on('connection', function (socket) {
             ++userCnt[room];
         }
 
-        console.log(user + '님 - [' + room + '] 채팅서버로 join함');
+        console.log(user + '님 - [' + room + '] 채널로 join함');
 
         io.sockets.in(room).emit('newUser', user);
 
@@ -302,14 +340,14 @@ io.on('connection', function (socket) {
     socket.on('chat', function (msg) {
         io.sockets.in(room).emit('chatmsg', user, msg);
     });
-    
+
     //한명 게임오버시 처리
     socket.on('gg', function (whodie) {
-        
+
         //gg 유저 삭제
         userDelete(onUser, whodie);
-        
-        console.log(whodie+" GG - 남은 user: "+onUser[room]);
+
+        console.log(whodie + " GG - 남은 user: " + onUser[room]);
         io.sockets.in(room).emit('gameover', whodie);
         io.sockets.in(room).emit('keepgame', onUser[room]); //남은 사용자 게임 진행
     });
@@ -328,7 +366,7 @@ io.on('connection', function (socket) {
 
         console.log(user + " : 유저 삭제완료");
         console.dir(onUser);
-        
+
         if (onUser[room].length <= 1 && wordCnt[room] >= 0) {
             io.sockets.in(room).emit('winner', onUser[room][0]);
         }
@@ -339,7 +377,7 @@ io.on('connection', function (socket) {
                 word_n_cnt_reset(userWord, wordCnt);
             }
         }
-        
+
         io.sockets.in(room).emit('logout', user);
         io.sockets.in(room).emit('refreshUser', onUser[room], 0);
     });

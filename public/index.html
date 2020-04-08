@@ -5,26 +5,65 @@
     <meta charset="UTF-8">
     <title>곰곰해온라인 :: BearChain</title>
     <script src="/public/module.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <link rel="stylesheet" type="text/css" href="/public/style.css">
 
     <script>
         var win = '<%if(locals.win){%><%=win%><%}else{0}%>';
         var lose = '<%if(locals.lose){%><%=lose%><%}else{0}%>';
-        
-        function win_lose_pop(){
-            if(win.length > 1){
+
+        var userId = '<%if(locals.logined_id){%><%=logined_id%><%}else{0}%>';
+
+        var load_text = '접속중입니다';
+
+        function win_lose_pop() {
+            if (win.length > 1) {
                 document.getElementById("hide_win").style.display = "inline-block";
             }
-            
-            if(lose.length > 1){
+
+            if (lose.length > 1) {
                 document.getElementById("hide_lose").style.display = "inline-block";
             }
         }
+
+        $(function() {
+            if (userId.length > 1) {
+                $('.hide_load').css('display', 'inline-block');
+            }
+
+            const load_tick = () => {
+                load_text = load_text + '.';
+                $('#load_info').html(load_text);
+            }
+
+            var load_timer = setInterval(load_tick, 1000);
+            clearInterval(load_timer);
+
+
+            //채널 선택(클릭)시
+            $('#r' + 1).click(function() {
+                location.href = "/process/enterch/1";
+            });
+            $('#r' + 2).click(function() {
+                location.href = "/process/enterch/2";
+            });
+            $('#r' + 3).click(function() {
+                location.href = "/process/enterch/3";
+            });
+            $('#r' + 4).click(function() {
+                location.href = "/process/enterch/4";
+            });
+            $('#r' + 5).click(function() {
+                location.href = "/process/enterch/5";
+            });
+
+        })
+
     </script>
 
 </head>
 
-<body onload="document.setUser.nickname.focus(); win_lose_pop();">
+<body onload="document.setUser.nickname.focus(); win_lose_pop(); ">
     <div class="screen">
         <div class="mainview">
             <div class="logo">
@@ -60,6 +99,52 @@
                 <div class="win_text" style="color: crimson;">LOSE!</div>
                 <span class="text_info" style="color: dodgerblue; cursor:pointer; font-size: 25px;" onclick="location.href = '/'">다시 게임에 참가하기</span>
                 <span class="text_info" style="margin: 0 20px;"></span><span class="text_info" style="color: crimson; cursor:pointer; font-size: 25px;" onclick="location.href = '/process/logout'">그만하기</span>
+            </div>
+        </div>
+        
+        <div class="hide_load">
+           <span id="ch_info">님, 채널을 선택하세요!</span><hr style="border:1px solid saddlebrown;">
+            <div class="load_list">
+               
+                <div class="room" id="r1">
+                    <p class="r_name">채널 1</p>
+                    <span class="r_num" id="p1">0</span>
+                    <span class="r_num">/ 5</span>
+                </div>
+
+                <div class="room" id="r2">
+                    <p class="r_name">채널 2</p>
+                    <span class="r_num" id="p2">0</span>
+                    <span class="r_num">/ 5</span>
+                </div>
+
+                   
+                <div class="room" id="r3">
+                    <p class="r_name">채널 3</p>
+                    <span class="r_num" id="p3">0</span>
+                    <span class="r_num">/ 5</span>
+                </div>
+                
+                
+                <div class="room" id="r4">
+                    <p class="r_name">채널 4</p>
+                    <span class="r_num" id="p4">0</span>
+                    <span class="r_num">/ 5</span>
+                </div>
+                
+                
+                <div class="room" id="r5">
+                    <p class="r_name">채널 5</p>
+                    <span class="r_num" id="p5">0</span>
+                    <span class="r_num">/ 5</span>
+                </div>
+            </div>
+            <div id="load_msg">
+                <span id="load_info">접속중입니다</span>
+                <p class="text_info">바로 게임이 시작되니 준비하세요!</p>
+            </div>
+            <div class="load_bt" style="text-align: right;">
+                <input class="closeBt" type="button" value="나가기" onclick="location.href='/process/logout'">
             </div>
         </div>
     </div>
