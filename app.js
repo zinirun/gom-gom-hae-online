@@ -35,8 +35,12 @@ app.use(cors());
 //사전 DB 생성
 let dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, "").split('\n');
 
+const _maxUsers = 1;
+
 var userId;
 var roomId;
+
+var can_join = true; //사용자가 join 중일때는 false, true일때 join
 
 var router = express.Router();
 
@@ -44,101 +48,136 @@ var router = express.Router();
 router.route('/').get(function (req, res) {
 
     if (req.session.user) {
-        res.redirect('/process/selectch');
-    } else {
+
+        var _room = req.session.user.room || 1;
+        var _id = req.session.user.id;
+
+        if (_room == 1) {
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    ch1: 'checked',
+                    uid: _id,
+                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                }));
+            });
+        }
+
+        if (_room == 2) {
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    ch2: 'checked',
+                    uid: _id,
+                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                }));
+            });
+        }
+
+        if (_room == 3) {
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    ch3: 'checked',
+                    uid: _id,
+                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                }));
+            });
+        }
+
+        if (_room == 4) {
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    ch4: 'checked',
+                    uid: _id,
+                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                }));
+            });
+        }
+
+        if (_room == 5) {
+            fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                res.send(ejs.render(data, {
+                    ch5: 'checked',
+                    uid: _id,
+                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                }));
+            });
+        }
+
+    }
+    //쿠키 없을 때
+    else {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {}));
         });
     }
 });
 
-//메인 로그인 라우터
-router.route('/process/login').post(function (req, res) {
-    
+//메인 로그인 - 게임 라우터
+router.route('/process/game').post(function (req, res) {
+    /////// USER GAME IN START
+
     userId = req.body.nickname;
+    roomId = req.body.ch;
 
-    if (req.session.user) {
-        res.redirect('/process/selectch');
-    } else {
-        if (userId.length < 2) {
+    if (onUser[roomId]) {
+        if (onUser[roomId].length >= _maxUsers) {
             fs.readFile('./public/index.html', 'utf8', function (error, data) {
                 res.send(ejs.render(data, {
-                    msg: '2글자 이상 입력하세요!'
+                    msg: '채널 인원 초과입니다.'
                 }));
             });
-        } else if (userId.includes(" ")) {
-            fs.readFile('./public/index.html', 'utf8', function (error, data) {
-                res.send(ejs.render(data, {
-                    msg: '공백은 사용할 수 없어요.'
-                }));
-            });
-        } else if (!usernameValid(userId)) {
-            fs.readFile('./public/index.html', 'utf8', function (error, data) {
-                res.send(ejs.render(data, {
-                    msg: '사용 중인 이름이에요.'
-                }));
-            });
-        } else {
-            req.session.user = {
-                id: userId,
-                authorized: true
-            };
-            res.redirect('/process/selectch');
         }
-    }
-});
-
-
-//메인 -> 채널선택 라우터
-router.route('/process/selectch').get(function (req, res) {
-
-    if (req.session.user) {
+    } else if (userId.length < 2) {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                logined_id: userId
+                msg: '2글자 이상 입력하세요!'
             }));
         });
-    } else {
+    } else if (userId.includes(" ")) {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                msg: '닉네임을 정한 후 채널을 선택하세요!'
+                msg: '공백은 사용할 수 없어요.'
             }));
         });
-    }
-});
-
-//메인 로그인 라우터
-router.route('/process/enterch/:id').get(function (req, res) {
-
-    if (req.session.user) {
-        
-        roomId = req.params.id;
-        
-        res.redirect('/process/game');
-    } else {
+    } else if (!usernameValid(userId)) {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                msg: '닉네임을 정한 후 채널을 선택하세요!'
+                msg: '사용 중인 이름이에요.'
+            }));
+        });
+    } else if (!roomId) {
+        can_join = true;
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                msg: '접속할 채널을 선택하세요!'
             }));
         });
     }
-});
+    else {
+        //ID 조건 만족 시 입장
+        req.session.user = {
+            id: userId,
+            room: roomId,
+            authorized: true
+        };
 
-
-
-//게임 입장 라우터
-router.route('/process/game').get(function (req, res) {
-    if (req.session.user && roomId) {
-        //채팅 서버 입장
+        //게임 서버 입장
         fs.readFile('./public/game.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                userId: userId,
-                roomId: roomId
+                userId: req.session.user.id,
+                roomId: req.session.user.room
             }));
         });
-    } else {
-        res.redirect('/');
     }
+    /////// USER GAME IN END
+    
+});
+
+router.route('/process/game').get(function (req, res) {
+    fs.readFile('./public/index.html', 'utf8', function (error, data) {
+        res.send(ejs.render(data, {
+            msg: '잘못된 접근입니다.'
+        }));
+    });
 });
 
 //승리 라우터
@@ -242,9 +281,10 @@ var onUser = []; //room별 user data, cnt는 length로 계산
 var userCnt = []; //room별 user count
 var userWord = []; //room 별 userword data
 var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
+var mainroom = 9;
 
 //Array init
-for(var i=0; i<5; i++){
+for (var i = 0; i < 5; i++) {
     userWord[i] = new Array();
     onUser[i] = new Array();
     userCnt[i] = 0;
@@ -253,10 +293,17 @@ for(var i=0; i<5; i++){
 
 io.on('connection', function (socket) {
 
-    console.log('[SOCKET.IO] 게임 서버 연결됨');
+    console.log('[SOCKET.IO] 서버 연결됨');
+
     var room;
     var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
+
+    socket.on('main_join', function () {
+        console.log("main join");
+        socket.join(mainroom);
+        io.sockets.in(mainroom).emit('live_sv', onUser);
+    });
 
     socket.on('join', function (data) {
 
@@ -287,8 +334,8 @@ io.on('connection', function (socket) {
         console.log(user + '님 - [' + room + '] 채널로 join함');
 
         io.sockets.in(room).emit('newUser', user);
-
         io.sockets.in(room).emit('refreshUser', onUser[room], 1);
+        io.sockets.in(mainroom).emit('live_sv', onUser);
     });
 
     socket.on('newgame', function () {
@@ -367,8 +414,10 @@ io.on('connection', function (socket) {
         console.log(user + " : 유저 삭제완료");
         console.dir(onUser);
 
-        if (onUser[room].length <= 1 && wordCnt[room] >= 0) {
-            io.sockets.in(room).emit('winner', onUser[room][0]);
+        if (onUser[room]) {
+            if (onUser[room].length <= 1 && wordCnt[room] >= 0) {
+                io.sockets.in(room).emit('winner', onUser[room][0]);
+            }
         }
 
         if (userCnt[room] < 1 || !userCnt[room]) {
@@ -380,6 +429,7 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('logout', user);
         io.sockets.in(room).emit('refreshUser', onUser[room], 0);
+        io.sockets.in(mainroom).emit('live_sv', onUser);
     });
 
     function word_n_cnt_reset(uw, wc) {
