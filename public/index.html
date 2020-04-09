@@ -48,21 +48,10 @@
             });
 
 
-            //채널 선택(클릭)시
-            $('#r' + 1).click(function() {
-                location.href = "/process/enterch/1";
-            });
-            $('#r' + 2).click(function() {
-                location.href = "/process/enterch/2";
-            });
-            $('#r' + 3).click(function() {
-                location.href = "/process/enterch/3";
-            });
-            $('#r' + 4).click(function() {
-                location.href = "/process/enterch/4";
-            });
-            $('#r' + 5).click(function() {
-                location.href = "/process/enterch/5";
+            //채널 선택(클릭)시 닉네임 포커스
+            $('.room').click(function() {
+                $('#nick').focus();
+                $('#nick').attr("placeholder","이제 닉네임을 정하세요!");
             });
 
         })
@@ -137,7 +126,7 @@
                     </label>
                 </div>
                 
-                <input type="text" name="nickname" maxlength="6" autocomplete="off" value="<%if(locals.uid){%><%=uid%><%}%>">
+                <input id="nick" type="text" name="nickname" maxlength="6" autocomplete="off" value="<%if(locals.uid){%><%=uid%><%}%>">
                 <input type="submit" name="login" value="↵">
                 
                 <div class="text_info">

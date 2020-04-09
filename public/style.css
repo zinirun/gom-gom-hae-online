@@ -49,8 +49,10 @@ form[name="setUser"] {
 
 input[name="nickname"] {
     background: white;
+    width: 335px;
     height: 40px;
     font-size: 28px;
+    font-family: inherit;
     padding: 0.7rem;
     border-radius: 10px;
     border-style: none;
@@ -230,7 +232,8 @@ li {
 }
 
 .load_list{
-    margin-top: 30px;
+    margin-top: 15px;
+    height: 85px;
 }
 
 #load_info{
@@ -263,7 +266,6 @@ li {
 
 .chDiv{
     color: white;
-    margin-top: -15px;
 }
 
 input[type="radio"]{

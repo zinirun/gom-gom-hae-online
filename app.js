@@ -35,12 +35,25 @@ app.use(cors());
 //사전 DB 생성
 let dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, "").split('\n');
 
-const _maxUsers = 1;
+const maxUsers = 5;
 
 var userId;
 var roomId;
 
-var can_join = true; //사용자가 join 중일때는 false, true일때 join
+
+//In Socket
+var onUser = []; //room별 user data, cnt는 length로 계산
+var userCnt = []; //room별 user count
+var userWord = []; //room 별 userword data
+var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
+var mainroom = 0;
+
+//Array init
+for (var i = 0; i < 6; i++) {
+    userWord[i] = new Array();
+    onUser[i] = new Array();
+    userCnt[i] = 0;
+}
 
 var router = express.Router();
 
@@ -118,18 +131,16 @@ router.route('/process/game').post(function (req, res) {
     userId = req.body.nickname;
     roomId = req.body.ch;
 
-    if (onUser[roomId]) {
-        if (onUser[roomId].length >= _maxUsers) {
-            fs.readFile('./public/index.html', 'utf8', function (error, data) {
-                res.send(ejs.render(data, {
-                    msg: '채널 인원 초과입니다.'
-                }));
-            });
-        }
+    if (chCheck(roomId) == 1) {
+        fs.readFile('./public/index.html', 'utf8', function (error, data) {
+            res.send(ejs.render(data, {
+                msg: '채널 인원 초과입니다.'
+            }));
+        });
     } else if (userId.length < 2) {
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                msg: '2글자 이상 입력하세요!'
+                msg: '2글자 이상 입력하세요.'
             }));
         });
     } else if (userId.includes(" ")) {
@@ -148,11 +159,10 @@ router.route('/process/game').post(function (req, res) {
         can_join = true;
         fs.readFile('./public/index.html', 'utf8', function (error, data) {
             res.send(ejs.render(data, {
-                msg: '접속할 채널을 선택하세요!'
+                msg: '접속할 채널을 선택하세요.'
             }));
         });
-    }
-    else {
+    } else {
         //ID 조건 만족 시 입장
         req.session.user = {
             id: userId,
@@ -169,13 +179,13 @@ router.route('/process/game').post(function (req, res) {
         });
     }
     /////// USER GAME IN END
-    
+
 });
 
 router.route('/process/game').get(function (req, res) {
     fs.readFile('./public/index.html', 'utf8', function (error, data) {
         res.send(ejs.render(data, {
-            msg: '잘못된 접근입니다.'
+            msg: '잘못된 접근입니다. 다시 접속하세요.'
         }));
     });
 });
@@ -245,6 +255,19 @@ router.route('/process/winner').get(function (req, res) {
 // 라우터 끝
 app.use('/', router);
 
+//채널 최대 사용자 검사
+function chCheck(rId) {
+    var check;
+    if (onUser[rId]) {
+        if (onUser[rId].length >= maxUsers) {
+            check = 1; //초과 시 1 리턴
+        }
+    } else {
+        check = 0;
+    }
+    return check;
+}
+
 //로그인 시 중복 이름 검사
 function usernameValid(name) {
     for (var i in onUser) {
@@ -275,20 +298,6 @@ http.listen(app.get('port'),
         console.log('express server started with port ' + app.get('port'));
     }
 );
-
-//상황에 맞는 초기화가 관건..!
-var onUser = []; //room별 user data, cnt는 length로 계산
-var userCnt = []; //room별 user count
-var userWord = []; //room 별 userword data
-var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
-var mainroom = 9;
-
-//Array init
-for (var i = 0; i < 5; i++) {
-    userWord[i] = new Array();
-    onUser[i] = new Array();
-    userCnt[i] = 0;
-}
 
 
 io.on('connection', function (socket) {
