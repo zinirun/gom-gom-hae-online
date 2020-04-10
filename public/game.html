@@ -84,7 +84,7 @@
                 }
 
                 //워드체인에 메시지(3글자) 삽입
-                $('#chain').append('<div style="background:' + userColor[userCount] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+                $('#chain').append('<div style="background:' + userColor[(turnCnt-1)%userCnt] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
 
                 //게임 진행(다음 턴)
                 keepGame();
