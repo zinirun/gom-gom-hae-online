@@ -317,6 +317,7 @@ io.on('connection', function (socket) {
         socket.join(mainroom);
         
         lobbyUserCnt = io.sockets.adapter.rooms[0].length;
+        
         console.log("in lobby: "+lobbyUserCnt);
         
         io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
@@ -446,7 +447,12 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('logout', user);
         io.sockets.in(room).emit('refreshUser', onUser[room], 0);
-        io.sockets.in(mainroom).emit('live_sv', onUser, (lobbyUserCnt-1));
+        
+        if(io.sockets.adapter.rooms[0]){
+            lobbyUserCnt = io.sockets.adapter.rooms[0].length;
+        }
+        
+        io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
     });
 
     function word_n_cnt_reset(uw, wc) {
