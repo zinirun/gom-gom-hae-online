@@ -71,7 +71,7 @@ router.route('/').get(function (req, res) {
                 res.send(ejs.render(data, {
                     ch1: 'checked',
                     uid: _id,
-                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                    msg: _id + '님, 플레이만 누르시면 됩니다!'
                 }));
             });
         }
@@ -81,7 +81,7 @@ router.route('/').get(function (req, res) {
                 res.send(ejs.render(data, {
                     ch2: 'checked',
                     uid: _id,
-                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                    msg: _id + '님, 플레이만 누르시면 됩니다!'
                 }));
             });
         }
@@ -91,7 +91,7 @@ router.route('/').get(function (req, res) {
                 res.send(ejs.render(data, {
                     ch3: 'checked',
                     uid: _id,
-                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                    msg: _id + '님, 플레이만 누르시면 됩니다!'
                 }));
             });
         }
@@ -101,7 +101,7 @@ router.route('/').get(function (req, res) {
                 res.send(ejs.render(data, {
                     ch4: 'checked',
                     uid: _id,
-                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                    msg: _id + '님, 플레이만 누르시면 됩니다!'
                 }));
             });
         }
@@ -111,7 +111,7 @@ router.route('/').get(function (req, res) {
                 res.send(ejs.render(data, {
                     ch5: 'checked',
                     uid: _id,
-                    msg: _id + '님, 참가만 누르시면 됩니다!'
+                    msg: _id + '님, 플레이만 누르시면 됩니다!'
                 }));
             });
         }
@@ -313,8 +313,13 @@ io.on('connection', function (socket) {
 
     socket.on('main_join', function () {
         console.log("main join");
+        
         socket.join(mainroom);
-        io.sockets.in(mainroom).emit('live_sv', onUser);
+        
+        lobbyUserCnt = io.sockets.adapter.rooms[0].length;
+        console.log("in lobby: "+lobbyUserCnt);
+        
+        io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
     });
 
     socket.on('join', function (data) {

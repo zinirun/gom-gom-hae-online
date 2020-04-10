@@ -10,6 +10,10 @@ body {
     color: white;
 }
 
+span, p, div{
+    cursor: default;
+}
+
 .screen {
     width: 100%;
     text-align: center;
@@ -64,7 +68,7 @@ input[name="login"] {
     float: left;
     cursor: pointer;
     background: dodgerblue;
-    width: 113px;
+    width: 114px;
     height: 60px;
     padding: 0px;
     font-family: inherit;
@@ -166,6 +170,44 @@ input[type="radio"]:checked + div{
     background: #E47C1F;
 }
 
+.copyright{
+    margin-top: 5px;
+}
+
+.copyBt{
+    cursor: pointer;
+    background: inherit;
+    color: #c67b32;
+    border-style: none;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+}
+
+.copyBt:hover{
+    background: #c67b32;
+    color: white;
+}
+
+.helpbox{
+    color: black;
+}
+
+#lobby{
+    background: orange;
+    padding: 0.2rem 0.7rem;
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 110px;
+}
+
+#lobbycnt{
+    font-weight: 800;
+}
 
 /*GAME.HTML*/
 

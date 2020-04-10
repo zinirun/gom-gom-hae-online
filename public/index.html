@@ -13,9 +13,7 @@
         var win = '<%if(locals.win){%><%=win%><%}else{0}%>';
         var lose = '<%if(locals.lose){%><%=lose%><%}else{0}%>';
 
-        var load_text = '접속중입니다';
         var person = new Array(6);
-        var socketId = "";
 
         function win_lose_pop() {
             if (win.length > 1) {
@@ -34,7 +32,7 @@
             socket.emit('main_join');
             
             //userlist: onUser
-            socket.on('live_sv', function(userlist) {
+            socket.on('live_sv', function(userlist, lobbycnt) {
                 for(var i=1; i<=5; i++){
                     if(userlist[i]){
                         person[i] = userlist[i].length;
@@ -45,6 +43,7 @@
                         $('#d'+i).css("color", "red");
                     }
                 }
+                $('#lobbycnt').html(lobbycnt);
             });
 
 
@@ -136,16 +135,8 @@
                     <%}%>
                 </p>
                 </div>
-                
-                <div id="load_msg" style="display: none">
-                    <span id="load_info">접속중입니다</span>
-                    <p class="text_info">바로 게임이 시작되니 준비하세요!</p>
-                </div>
             </div>
-                    
             </form>
-            
-            
         </div>
         
         <div class="hide_win" id="hide_win">
@@ -164,6 +155,19 @@
             </div>
         </div>
         
+        <div class="hide_win" id="hide_help" style="background: #b9f08d; border-style: none; height: 420px; margin-top: -290px;">
+            <div class="helpbox">도움말<br></div>
+        </div>
+        
+        <div class="hide_win" id="hide_made" style="background: #b9f08d; border-style: none; height: 420px; margin-top: -290px;">
+            <div class="helpbox">제작자<br></div>
+        </div>
+            
+        <div class="copyright">
+            <span id="lobby"><span id="lobbycnt">1</span>명이 채널을 선택중입니다!</span>
+           <input class="copyBt" type="button" value="도움말">
+           <input class="copyBt" type="button" value="제작자">
+        </div>
     </div>
     
 </body>
