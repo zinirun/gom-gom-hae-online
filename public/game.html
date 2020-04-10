@@ -214,12 +214,12 @@
                     $('#m').attr("disabled", true);
                     $('.mychat').css("animation","");
                     $('#c').focus();
-                    $('#ans_msg').html(next_nickname + '님의 ' + turnCnt + '번째 턴!');
+                    $('#ans_msg').html(next_nickname + '의 ' + turnCnt + '번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
                 
                 $('.userChar').css('border-color', 'white');
-                $('.userChar:nth-child('+(turnCnt%userCnt+1)+')').css('border-bottom-color', 'crimson');
+                $('.userChar:nth-child('+((turnCnt-1)%userCnt+1)+')').css('border-bottom-color', 'crimson');
             }
 
             function clearTimer() {
