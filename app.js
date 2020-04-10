@@ -446,7 +446,7 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('logout', user);
         io.sockets.in(room).emit('refreshUser', onUser[room], 0);
-        io.sockets.in(mainroom).emit('live_sv', onUser);
+        io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
     });
 
     function word_n_cnt_reset(uw, wc) {
