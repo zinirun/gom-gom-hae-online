@@ -20,6 +20,7 @@
     "express": "^4.17.1",
     "express-error-handler": "^1.1.0",
     "express-session": "^1.17.0",
+    "forever": "^2.0.0",
     "fs": "0.0.1-security",
     "hangul-js": "^0.2.6",
     "hangul-tools": "^0.1.4",

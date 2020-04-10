@@ -20,10 +20,15 @@
         var curUser, turnCnt, userCnt;
 
         var socketId = "";
-        var userColor = ['#ECB257', '#CFE674', '#96E674', '#72E68B', '#74CFE6'];
+        var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
 
         $(function() {
-            var timeover = 7000;
+
+            var timeover = 10000;
+
+            if (data.roomId == 5) {
+                timeover = 30000;
+            }
 
             $('#m').focus();
 
@@ -147,15 +152,20 @@
             function keepGame() {
 
                 curUser = onUserList[turnCnt++ % userCnt] || data.userId;
-
-                if (turnCnt > 10) {
-                    timeover = 5000;
-                }
-                if (turnCnt > 20) {
-                    timeover = 3000;
-                }
-                if (turnCnt > 30) {
-                    timeover = 2000;
+                if (data.roomId != 5) {
+                    if (turnCnt >= 10) {
+                        timeover = 7000;
+                    }
+                    if (turnCnt >= 20) {
+                        timeover = 5000;
+                    }
+                    if (turnCnt >= 30) {
+                        timeover = 3000;
+                    }
+                    
+                    if (turnCnt >= 40) {
+                        timeover = 2000;
+                    }
                 }
 
                 turn(curUser);
@@ -173,7 +183,7 @@
                 viewtime = timeover; //reset
                 timebarPx = 210;
 
-
+                //내 턴
                 if (data.userId == next_nickname) {
 
                     if (timer_pause == true) {
@@ -182,30 +192,42 @@
                     }
 
                     $('#m').attr("disabled", false);
+                    $('.mychat').css("animation","highlightMe 1s 0s infinite");
                     $('#m').focus();
                     $('#ans_msg').html('나의 ' + turnCnt + '번째 턴!');
+                    
+                    //첫 단어인 경우 안내
+                    if (turnCnt == 1) {
+                        $('#ans_msg').html('첫 단어를 입력하세요!');
+                    }
+                    
                     $('#ans_msg').css('color', 'crimson');
 
-                } else {
-                    
+                }
+                else { //내 턴 아닐 때
+
                     clearTimer();
-                    
+
                     $('#timeBar').html("곧 나의 턴!");
                     $('#timeBar').css('width', '210px');
 
                     $('#m').attr("disabled", true);
+                    $('.mychat').css("animation","");
                     $('#c').focus();
                     $('#ans_msg').html(next_nickname + '님의 ' + turnCnt + '번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
+                
+                $('.userChar').css('border-color', 'white');
+                $('.userChar:nth-child('+(turnCnt%userCnt+1)+')').css('border-bottom-color', 'crimson');
             }
 
             function clearTimer() {
                 clearInterval(start);
                 timer_pause = true; //flag
             }
-            
-            
+
+
             //타 유저에게 게임오버 chatlog 출력
             socket.on('gameover', function(gguser) {
                 $('#chatlog').append('<li style="color:crimson"><b>[' + gguser + ']님 게임 오버! 첫 턴부터 게임을 이어갑니다!</b>');
@@ -271,7 +293,7 @@
             function refreshUserList(onUser) {
                 $('#userList').empty();
                 for (var i in onUser) {
-                    $('#userList').append('<span class="username">' + onUser[i] + '</span>');
+                    $('#userList').append('<div class="userChar"style="background: '+userColor[i]+'"><img class="uicon" src="/public/uicon.png" width="60px" height="60px" ><p class="username">'+onUser[i]+'</p></div>');
                 }
             }
 
@@ -309,9 +331,11 @@
 
             <hr width="70%" style="border-color: sandybrown; margin-top: 30px;">
             <div class="text_info">
-                [서버 <%= roomId %>] 접속중인 유저
+                [채널 <%= roomId %>] 게임중인 유저
             </div>
-            <div id="userList"></div>
+            <div id="userList">
+                <!--유저 캐릭터-->
+            </div>
         </div><br>
 
         <div class="userchat">

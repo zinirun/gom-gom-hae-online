@@ -17,8 +17,8 @@ body {
 
 .mainview {
     display: inline-block;
-    padding: 2rem 2rem 2rem 2.5rem;
-    margin-top: 200px;
+    padding: 1.5rem 40px 40px 2.5rem;
+    margin-top: 190px;
     border: 2px solid white;
     border-radius: 20px;
 }
@@ -48,29 +48,127 @@ form[name="setUser"] {
 }
 
 input[name="nickname"] {
+    float: left;
     background: white;
-    width: 335px;
-    height: 40px;
-    font-size: 28px;
+    width: 280px;
+    height: 60px;
+    padding: 0px 0px 0px 10px;
+    font-size: 27px;
+    font-weight: 500;
     font-family: inherit;
-    padding: 0.7rem;
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
     border-style: none;
 }
 
 input[name="login"] {
+    float: left;
     cursor: pointer;
-    background: inherit;
-    height: 40px;
-    font-size: 40px;
-    font-weight: 500;
+    background: dodgerblue;
+    width: 113px;
+    height: 60px;
+    padding: 0px;
+    font-family: inherit;
+    font-size: 23px;
+    font-weight: 600;
     color: white;
-    padding: 0.2rem 0.5rem;
-    border-radius: 10px;
     border-style: none;
+    border-radius: 0 10px 10px 0;
 }
 
+input[name="login"]:hover {
+    animation: loginAni 1s 0s infinite
+}
+
+@keyframes loginAni{
+    0%{
+        background: dodgerblue;
+    }
+    50%{
+        background: #69c6ff;
+    }
+    100%{
+        background: dodgerblue;
+    }
+}
+
+
+.hide_win {
+    display: none;
+    background: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 700px;
+    height: 280px;
+    overflow: hidden;
+    margin-top: -240px;
+    margin-left: -350px;
+    border-radius: 20px;
+    border-top: 10px solid dodgerblue;
+    border-bottom: 10px solid dodgerblue;
+}
+
+.win_text {
+    color: dodgerblue;
+    font-size: 140px;
+    font-weight: 600;
+
+}
+
+.load_list{
+    margin-top: 5px;
+    height: 90px;
+    float: left;
+}
+
+#load_info{
+    color: white;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.r_name{
+    font-weight: 500;
+}
+
+.room{
+    cursor: pointer;
+    display: inline-block;
+    width: 70px;
+    height: 55px;
+    line-height: 8px;
+    background: #bd8a5c;
+    font-size: 17px;
+    margin: 0 3px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+}
+
+.room:hover{
+    background: orange;
+}
+
+#load_msg{
+    margin-bottom: -30px;
+}
+
+.chDiv{
+    color: white;
+}
+
+input[type="radio"]{
+    display: none;
+}
+
+input[type="radio"]:checked + div{
+    display: inline-block;
+    background: #E47C1F;
+}
+
+
 /*GAME.HTML*/
+
 .menulist {
     margin-top: 10px;
 }
@@ -100,24 +198,6 @@ input[name="login"] {
     font-weight: 700;
 }
 
-.usernick {
-    border-top: 2px solid white;
-    width: 100px;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-#userlist {
-    text-align: center;
-}
-
-.username {
-    margin: 0 15px;
-    width: 100px;
-    font-size: 18px;
-    font-weight: 500;
-}
-
 .mychat {
     margin-top: -5px;
     background: white;
@@ -126,6 +206,10 @@ input[name="login"] {
     padding: 2rem;
     border-top: 5px solid #734114;
     border-radius: 0 0 10px 10px;
+}
+
+input{
+    outline: none;
 }
 
 input[name="myanswer"] {
@@ -138,7 +222,7 @@ input[name="myanswer"] {
     text-align: center;
     padding: 1.3rem 1rem;
     border-radius: 10px;
-    border-style: none;
+    border: 5px solid white;
 }
 
 .userchat {
@@ -194,7 +278,7 @@ li {
 }
 
 #ans_msg {
-    font-size: 18px;
+    font-size: 22px;
     color: saddlebrown;
     font-weight: 600;
     margin-top: -10px;
@@ -208,73 +292,46 @@ li {
     margin-bottom: 5px;
 }
 
-.hide_win {
-    display: none;
-    background: white;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 700px;
-    height: 280px;
-    overflow: hidden;
-    margin-top: -240px;
-    margin-left: -350px;
-    border-radius: 20px;
-    border-top: 10px solid dodgerblue;
-    border-bottom: 10px solid dodgerblue;
+#userList {
+    text-align: center;
+    margin-top: 10px;
 }
 
-.win_text {
-    color: dodgerblue;
-    font-size: 140px;
-    font-weight: 600;
-
+.userChar{
+    background: #ffe6bf;
+    margin: 0px 3px 0px 3px;
+    border: 3px solid white;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    height: 90px;
 }
 
-.load_list{
-    margin-top: 15px;
-    height: 85px;
+.uicon{
+    margin-top: 5px;
 }
 
-#load_info{
-    color: white;
-    font-size: 27px;
-    font-weight: 600;
-}
-
-.r_name{
+.username {
+    margin-top: -10px;
+    text-align: center;
+    font-size: 17px;
     font-weight: 500;
 }
 
-.room{
-    cursor: pointer;
-    display: inline-block;
-    width: 70px;
-    height: 55px;
-    line-height: 8px;
-    background: #bd8a5c;
+.usernick{
     font-size: 18px;
-    margin: 0 3px;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-radius: 10px;
+    font-weight: 400;
 }
 
-#load_msg{
-    margin-bottom: -30px;
-}
-
-.chDiv{
-    color: white;
-}
-
-input[type="radio"]{
-    display: none;
-}
-
-input[type="radio"]:checked + div{
-    display: inline-block;
-    border: 2px solid white;
-    color: black;
-    background: #E47C1F;
+@keyframes highlightMe{
+    0%{
+        background: white;
+    }
+    50%{
+        background: #fff2a7;
+    }
+    100%{
+        background: white;
+    }
 }

@@ -47,6 +47,7 @@ var userCnt = []; //room별 user count
 var userWord = []; //room 별 userword data
 var wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
 var mainroom = 0;
+var lobbyUserCnt = 0;
 
 //Array init
 for (var i = 0; i < 6; i++) {
@@ -258,6 +259,7 @@ app.use('/', router);
 //채널 최대 사용자 검사
 function chCheck(rId) {
     var check;
+
     if (onUser[rId]) {
         if (onUser[rId].length >= maxUsers) {
             check = 1; //초과 시 1 리턴
@@ -307,6 +309,7 @@ io.on('connection', function (socket) {
     var room;
     var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
+    
 
     socket.on('main_join', function () {
         console.log("main join");
