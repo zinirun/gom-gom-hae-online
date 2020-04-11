@@ -209,6 +209,65 @@ input[type="radio"]:checked + div{
     font-weight: 800;
 }
 
+.helpboxTop{
+    background: dodgerblue;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0.4rem;
+}
+
+.helpTop{
+    margin-left: 50px;
+}
+
+.closeTop{
+    cursor: pointer;
+    float: right;
+    font-size: 18px;
+    padding: 2px 0.5rem;
+    border-radius: 10px;
+    display: inline-block;
+    background: crimson;    
+}
+
+.closeTop:hover{
+    background: white;
+    color: black;
+}
+
+.helpboxBottom{
+    color: black;
+}
+
+.helpUl{
+    text-align: left;
+    margin-top: 0px;
+    font-size: 22px;
+    font-weight: 400;
+}
+
+.helpUl li{
+    list-style-type: square;
+}
+
+.boxTitle{
+    font-size: 20px;
+    font-weight: 500;
+    color: dodgerblue;
+}
+
+a{
+    padding: 0rem 0.3rem;
+    margin-right: 5px;
+    text-decoration: none;
+    background-color: dodgerblue;
+    color: white;
+    border-radius: 5px;
+}
+
+a:hover{
+    background: black;
+}
 /*GAME.HTML*/
 
 .menulist {

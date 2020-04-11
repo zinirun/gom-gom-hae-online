@@ -51,6 +51,8 @@
             $('.room').click(function() {
                 $('#nick').focus();
             });
+            
+            $('a').attr('target','_blank');
 
         })
 
@@ -155,18 +157,68 @@
             </div>
         </div>
         
-        <div class="hide_win" id="hide_help" style="background: #b9f08d; border-style: none; height: 420px; margin-top: -290px;">
-            <div class="helpbox">도움말<br></div>
+        <div class="hide_win" id="hide_help" style="background: white; border: 2px solid dodgerblue; height: 440px; margin-top: -290px;">
+            <div class="helpboxTop">
+                <span class="helpTop">도움말</span>
+                <div class="closeTop" onclick="hideHelp()">닫기</div>
+            </div>
+            <div class="helpboxBottom">
+                <span class="boxTitle">게임 방법</span>
+               
+                <ul class="helpUl">
+                    <li>채널 선택 후 닉네임을 정하고 (2~6글자) 게임에 참가하세요!
+                    <li>2~3글자로 끝말을 이어주세요. 내 차례일 때 화면이 깜빡입니다.
+                    <li>새로운 유저가 들어오면 게임을 다시 시작합니다.
+                    <li>한 명이 살아남을 때까지 게임은 지속됩니다!
+                </ul>
+                    <span class="boxTitle">게임 팁</span>
+                <ul class="helpUl" style="font-size: 18px; font-weight: 500">
+                    <li>채널에 혼자일 땐 혼자서 플레이하다가, 새로운 유저가 오면 게임을 다시 시작해요!
+                    <li>자유채널은 제한 시간이 다른 채널보다 훨씬 깁니다!
+                    <li>내 차례가 아닐 땐 바로 채팅 모드로 바껴서 채팅을 클릭할 필요가 없어요!
+                    <li>채팅을 하다가도 내 차례일 땐 정답 입력 모드로 바껴요!
+                    <li>두음법칙은 자동 표시됩니다!
+                </ul>
+            </div>
         </div>
         
-        <div class="hide_win" id="hide_made" style="background: #b9f08d; border-style: none; height: 420px; margin-top: -290px;">
-            <div class="helpbox">제작자<br></div>
+        <div class="hide_win" id="hide_made" style="background: white; border-style: none; height: 470px; margin-top: -290px;">
+            <div class="helpboxTop">
+                <span class="helpTop">제작자</span>
+                <div class="closeTop" onclick="hideMade()">안물</div>
+            </div>
+            <div class="helpboxBottom">
+                <span class="boxTitle">제작자는</span>
+                <ul class="helpUl" style="font-size: 18px; font-weight: 500">
+                    <li>허전진, 단국대학교 소프트웨어학과 16학번
+                    <li>
+                    <a href="http://zinirun.github.io">Portpolio</a>
+                    <a href="http://github.com/zinirun">Github</a>
+                    <a href="http://zinirun.blogspot.com">Blog</a>
+                    <a href="http://instagram.com/normalzini">Instagram</a>
+                </ul>
+                
+                <span class="boxTitle">어쩌다 만들었냐면,</span>
+                <ul class="helpUl" style="font-size: 18px; font-weight: 500">
+                    <li>피시방에서 게임 기다리는 시간이 너무 지루해 → 다같이 할 수 있는 웹 게임이 없을까?
+                    <li>게임은 간단하고, 마음 편하게 하고싶어 → 아무리 찾아도 없네..?
+                    <li>그냥 내가 만들어볼까? → 제작 시작
+                </ul>
+                
+                <span class="boxTitle">제작 기반</span>
+                <ul class="helpUl" style="font-size: 18px; font-weight: 500">
+                    <li>Backend: Node.js + Express + Socket.io
+                    <li>Frontend: VanillaJS + JQuery + HTML/CSS
+                    <li>Server: NHN Toast Cloud + Docker + Nginx
+                    <li>Office: AZIT coffee, Jukjeon
+                </ul>
+            </div>
         </div>
             
         <div class="copyright">
             <span id="lobby"><span id="lobbycnt">1</span>명이 채널을 선택중입니다!</span>
-           <input class="copyBt" type="button" value="도움말">
-           <input class="copyBt" type="button" value="제작자">
+           <input class="copyBt" type="button" value="도움말" onclick="showHelp()">
+           <input class="copyBt" type="button" value="제작자" onclick="showMade()">
         </div>
     </div>
     
