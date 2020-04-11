@@ -37,6 +37,7 @@ let dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, "").spli
 
 const maxUsers = 5;
 
+var can_join = true;
 var userId;
 var roomId;
 
@@ -125,61 +126,85 @@ router.route('/').get(function (req, res) {
     }
 });
 
-//메인 로그인 - 게임 라우터
+//메인 로그인 - 게임 라우터 (can_join 분산 대기처리)
 router.route('/process/game').post(function (req, res) {
     /////// USER GAME IN START
+    while (true) {
+        
+        if (!can_join) {
+            console.log("!can_join, user wait..");
+            continue; //while true 이동
+        }
+        
+        else {
+            can_join = false;
+            
+            userId = req.body.nickname;
+            roomId = req.body.ch;
 
-    userId = req.body.nickname;
-    roomId = req.body.ch;
+            if (chCheck(roomId) == 1) {
+                fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        msg: '채널 인원 초과입니다.'
+                    }));
+                    res.end();
+                });
+            } else if (userId.length < 2) {
+                fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        msg: '2글자 이상 입력하세요.'
+                    }));
+                    res.end();
+                });
+            } else if (userId.includes(" ")) {
+                fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        msg: '공백은 사용할 수 없어요.'
+                    }));
+                    res.end();
+                });
+            } else if (!usernameValid(userId)) {
+                fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        msg: '사용 중인 이름이에요.'
+                    }));
+                    res.end();
+                });
+            } else if (!roomId) {
+                fs.readFile('./public/index.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        msg: '접속할 채널을 선택하세요.'
+                    }));
+                    res.end();
+                });
+            } else {
+                //ID 조건 만족 시 입장
+                req.session.user = {
+                    id: userId,
+                    room: roomId,
+                    authorized: true
+                };
 
-    if (chCheck(roomId) == 1) {
-        fs.readFile('./public/index.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                msg: '채널 인원 초과입니다.'
-            }));
-        });
-    } else if (userId.length < 2) {
-        fs.readFile('./public/index.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                msg: '2글자 이상 입력하세요.'
-            }));
-        });
-    } else if (userId.includes(" ")) {
-        fs.readFile('./public/index.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                msg: '공백은 사용할 수 없어요.'
-            }));
-        });
-    } else if (!usernameValid(userId)) {
-        fs.readFile('./public/index.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                msg: '사용 중인 이름이에요.'
-            }));
-        });
-    } else if (!roomId) {
+                //게임 서버 입장
+                fs.readFile('./public/game.html', 'utf8', function (error, data) {
+                    res.send(ejs.render(data, {
+                        userId: req.session.user.id,
+                        roomId: req.session.user.room
+                    }));
+                    res.end();
+                });
+            }
+            /////// USER GAME IN END
+
+        }
+        
         can_join = true;
-        fs.readFile('./public/index.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                msg: '접속할 채널을 선택하세요.'
-            }));
-        });
-    } else {
-        //ID 조건 만족 시 입장
-        req.session.user = {
-            id: userId,
-            room: roomId,
-            authorized: true
-        };
-
-        //게임 서버 입장
-        fs.readFile('./public/game.html', 'utf8', function (error, data) {
-            res.send(ejs.render(data, {
-                userId: req.session.user.id,
-                roomId: req.session.user.room
-            }));
-        });
+        
+        if (can_join == true) {
+            break;
+        }
+        
     }
-    /////// USER GAME IN END
 
 });
 
@@ -309,17 +334,17 @@ io.on('connection', function (socket) {
     var room;
     var myCnt = 0; //턴 계산 위함
     var user = userId || socket.id;
-    
+
 
     socket.on('main_join', function () {
         console.log("main join");
-        
+
         socket.join(mainroom);
-        
+
         lobbyUserCnt = io.sockets.adapter.rooms[0].length;
-        
-        console.log("in lobby: "+lobbyUserCnt);
-        
+
+        console.log("in lobby: " + lobbyUserCnt);
+
         io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
     });
 
@@ -447,11 +472,11 @@ io.on('connection', function (socket) {
 
         io.sockets.in(room).emit('logout', user);
         io.sockets.in(room).emit('refreshUser', onUser[room], 0);
-        
-        if(io.sockets.adapter.rooms[0]){
+
+        if (io.sockets.adapter.rooms[0]) {
             lobbyUserCnt = io.sockets.adapter.rooms[0].length;
         }
-        
+
         io.sockets.in(mainroom).emit('live_sv', onUser, lobbyUserCnt);
     });
 

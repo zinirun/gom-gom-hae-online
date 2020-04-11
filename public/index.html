@@ -26,21 +26,20 @@
         }
 
         $(function() {
-            
             var socket = io();
-            
+
             socket.emit('main_join');
-            
+
             //userlist: onUser
             socket.on('live_sv', function(userlist, lobbycnt) {
-                for(var i=1; i<=5; i++){
-                    if(userlist[i]){
+                for (var i = 1; i <= 5; i++) {
+                    if (userlist[i]) {
                         person[i] = userlist[i].length;
                     }
-                    $('#p'+i).html(person[i]);
-                    $('#d'+i).css("color", "white");
-                    if(person[i] >= 5){
-                        $('#d'+i).css("color", "red");
+                    $('#p' + i).html(person[i]);
+                    $('#d' + i).css("color", "white");
+                    if (person[i] >= 5) {
+                        $('#d' + i).css("color", "red");
                     }
                 }
                 $('#lobbycnt').html(lobbycnt);
@@ -51,8 +50,8 @@
             $('.room').click(function() {
                 $('#nick').focus();
             });
-            
-            $('a').attr('target','_blank');
+
+            $('a').attr('target', '_blank');
 
         })
 
@@ -60,7 +59,7 @@
 
 </head>
 
-<body onload="document.setUser.nickname.focus(); win_lose_pop(); ">
+<body onload="document.setUser.nickname.focus(); win_lose_pop();">
     <div class="screen">
         <div class="mainview">
             <div class="logo">
@@ -70,12 +69,11 @@
                 접속하기
             </div>
             <form name="setUser" method="post" action="/process/game">
-                
+
                 <div class="chDiv">
-                <div class="load_list">
-                   <label>
-                       <input type="radio" name="ch" value="1"
-                       <%if(locals.ch1){%><%=ch1%><%}%>>
+                    <div class="load_list">
+                        <label>
+                            <input type="radio" name="ch" value="1" <%if(locals.ch1){%><%=ch1%><%}%>>
                         <div class="room" id="d1">
                             <p class="r_name">채널 1</p>
                             <span class="r_num" id="p1">0</span>
@@ -132,9 +130,7 @@
                 <div class="text_info" style="float: left;">
                 <p>채널과 닉네임(6자 이하)을 정하고 게임에 참가하세요!</p>
                 <p style="color: yellow; margin-bottom: -10px;">
-                    <%if(locals.msg){%>
-                    <%=msg%>
-                    <%}%>
+                    <%if(locals.msg){%> <%=msg%> <%}%>
                 </p>
                 </div>
             </div>

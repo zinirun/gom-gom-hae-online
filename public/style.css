@@ -14,6 +14,10 @@ span, p, div{
     cursor: default;
 }
 
+.room span, .room p{
+    cursor: pointer;
+}
+
 .screen {
     width: 100%;
     text-align: center;
@@ -80,15 +84,21 @@ input[name="login"] {
 }
 
 input[name="login"]:hover {
-    animation: loginAni 1s 0s infinite
+    animation: loginAni 0.7s 0s infinite
 }
 
 @keyframes loginAni{
     0%{
         background: dodgerblue;
     }
+    25%{
+        background: #17DBD8;
+    }
     50%{
-        background: #69c6ff;
+        background: #00D99F;
+    }
+    75%{
+        background: #00A9D9;
     }
     100%{
         background: dodgerblue;
@@ -141,8 +151,8 @@ input[name="login"]:hover {
     width: 70px;
     height: 55px;
     line-height: 8px;
-    background: #bd8a5c;
-    font-size: 17px;
+    background: #729DC3;
+    font-size: 16px;
     margin: 0 3px;
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -150,7 +160,7 @@ input[name="login"]:hover {
 }
 
 .room:hover{
-    background: orange;
+    background-color: dodgerblue;
 }
 
 #load_msg{
@@ -167,7 +177,7 @@ input[type="radio"]{
 
 input[type="radio"]:checked + div{
     display: inline-block;
-    background: #E47C1F;
+    background: dodgerblue;
 }
 
 .copyright{
