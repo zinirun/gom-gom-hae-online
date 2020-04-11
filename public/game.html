@@ -24,7 +24,7 @@
 
         $(function() {
 
-            var timeover = 10000;
+            var timeover = 12000;
 
             if (data.roomId == 5) {
                 timeover = 30000;
@@ -154,17 +154,16 @@
                 curUser = onUserList[turnCnt++ % userCnt] || data.userId;
                 if (data.roomId != 5) {
                     if (turnCnt >= 10) {
-                        timeover = 7000;
+                        timeover = 10000;
                     }
                     if (turnCnt >= 20) {
-                        timeover = 5000;
+                        timeover = 7000;
                     }
                     if (turnCnt >= 30) {
-                        timeover = 3000;
+                        timeover = 5000;
                     }
-                    
                     if (turnCnt >= 40) {
-                        timeover = 2000;
+                        timeover = 3000;
                     }
                 }
 

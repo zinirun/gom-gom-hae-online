@@ -63,7 +63,7 @@ router.route('/').get(function (req, res) {
 
     if (req.session.user) {
 
-        var _room = req.session.user.room || 1;
+        var _room = req.session.user.room || 5;
         var _id = req.session.user.id;
 
         if (_room == 1) {
