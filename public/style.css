@@ -7,7 +7,7 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 30px;
     font-weight: 300;
-    color: white;
+    color: black;
     background-color: #60340D;
     background-image: linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A);
     background-position: 0 0, 0 0, 25px 50px, 25px 50px, 0 0, 25px 50px;
@@ -32,23 +32,39 @@ div {
 
 .mainview {
     display: inline-block;
-    background: #6C3708;
+    background: white;
+    opacity: 0.75;
     padding: 1.5rem 40px 40px 2.5rem;
     margin-top: 190px;
     box-shadow: 0px 0px 20px 10px #986C44;
     border-radius: 20px;
 }
 
+.mainview:hover, .mainview:focus-within{
+    opacity: 1;
+}
+
 .logo {
+    color: dodgerblue;
     text-align: left;
-    font-size: 40px;
-    font-weight: 700;
+    font-size: 50px;
+    font-weight: 800;
+}
+
+.highversion{
+    vertical-align: top;
+    font-size: 13px;
+    background: dodgerblue;
+    padding: 0.1rem 0.4rem;
+    border-radius: 10px 0 10px 0;
+    color: white;
 }
 
 .logo_semi {
+    color: cornflowerblue;
     margin-top: -15px;
     text-align: left;
-    font-size: 40px;
+    font-size: 37px;
     font-weight: 200;
 }
 
@@ -66,13 +82,14 @@ input[name="nickname"] {
     float: left;
     background: white;
     width: 280px;
-    height: 60px;
+    height: 56px;
     padding: 0px 0px 0px 10px;
     font-size: 27px;
     font-weight: 500;
     font-family: inherit;
     border-radius: 10px 0 0 10px;
-    border-style: none;
+    border: 2px solid dodgerblue;
+    border-right: 0px;
 }
 
 input[name="login"] {
@@ -164,14 +181,14 @@ input[name="login"]:hover {
     line-height: 8px;
     background: #729DC3;
     font-size: 16px;
-    margin: 0 3px;
+    margin: 0 3.1px;
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-radius: 10px;
 }
 
 .room:hover {
-    background-color: cornflowerblue;
+    background-color: deepskyblue;
 }
 
 #load_msg {
@@ -179,6 +196,7 @@ input[name="login"]:hover {
 }
 
 .chDiv {
+    margin-top: 25px;
     color: white;
 }
 
@@ -395,6 +413,10 @@ li {
     padding: 0.3rem 0.7rem;
     border: 0px;
     border-radius: 7px;
+}
+
+.gamebutton:hover{
+    background: orange;
 }
 
 .text_answer_info {

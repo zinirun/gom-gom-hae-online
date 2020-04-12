@@ -63,10 +63,10 @@
     <div class="screen">
         <div class="mainview">
             <div class="logo">
-                곰곰해온라인
+                곰곰해온라인<span class="highversion">BETA</span>
             </div>
             <div class="logo_semi">
-                접속하기
+                
             </div>
             <form name="setUser" method="post" action="/process/game">
 
@@ -127,10 +127,10 @@
                     <input id="nick" type="text" name="nickname" maxlength="6" autocomplete="off" value="<%if(locals.uid){%><%=uid%><%}%>"><input type="submit" name="login" value="플레이">
                 </div>
                 
-                <div class="text_info" style="float: left;">
+                <div class="text_info" style="float: left; color: dodgerblue; margin-bottom: -10px;">
                 <p>채널과 닉네임(6자 이하)을 정하고 게임에 참가하세요!</p>
-                <p style="color: yellow; margin-bottom: -10px;">
-                    <%if(locals.msg){%> <%=msg%> <%}%>
+                <p style="font-size: 16px; color: white; background: #FF277D; margin-bottom: -10px; border-radius: 5px; padding: 0.1rem;">
+                    <%if(locals.msg){%> <%="메시지 : "+msg%> <%}%>
                 </p>
                 </div>
             </div>
