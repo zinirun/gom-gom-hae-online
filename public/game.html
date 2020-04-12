@@ -27,7 +27,7 @@
             var timeover = 12000;
 
             if (data.roomId == 5) {
-                timeover = 30000;
+                timeover = 3000000;
             }
 
             $('#m').focus();
@@ -305,7 +305,7 @@
     </script>
 </head>
 
-<body style="color: black;">
+<body style="color:black;">
     <div class="screen">
         <div class="menulist">
             <input class="gamebutton" id="logoutBtn" type="button" value="게임에서 나가기" onclick="logout();">
@@ -328,8 +328,7 @@
             <!--단어오류 메시지-->
             <span class="text_answer_info"></span>
 
-            <hr width="70%" style="border-color: sandybrown; margin-top: 30px;">
-            <div class="text_info">
+            <div class="text_info" style="margin-top: 10px;">
                 [채널 <%= roomId %>] 게임중인 유저
             </div>
             <div id="userList">
@@ -343,7 +342,7 @@
                     <li><b>채팅 기록은 서버에 저장됩니다. 바른 말을 사용하여 주세요!</b></li>
                 </ul>
             </div>
-            <form id="chatForm" action="">
+            <form id="chatForm" action="" style="margin-top: -3px;float: left;">
                 <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
             </form>
         </div>

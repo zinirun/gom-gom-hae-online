@@ -1,20 +1,27 @@
 @import url('https://fonts.googleapis.com/css?family=Jua&display=swap');
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
+/*default background #734114*/
 
 body {
-    background: #734114;
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 30px;
     font-weight: 300;
     color: white;
+    background-color: #60340D;
+    background-image: linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A);
+    background-position: 0 0, 0 0, 25px 50px, 25px 50px, 0 0, 25px 50px;
+    background-size: 50px 100px;
 }
 
-span, p, div{
+span,
+p,
+div {
     cursor: default;
 }
 
-.room span, .room p{
+.room span,
+.room p {
     cursor: pointer;
 }
 
@@ -25,9 +32,10 @@ span, p, div{
 
 .mainview {
     display: inline-block;
+    background: #6C3708;
     padding: 1.5rem 40px 40px 2.5rem;
     margin-top: 190px;
-    border: 2px solid white;
+    box-shadow: 0px 0px 20px 10px #986C44;
     border-radius: 20px;
 }
 
@@ -45,7 +53,6 @@ span, p, div{
 }
 
 .text_info {
-    margin-top: -5px;
     font-size: 18px;
     font-weight: 500;
     color: #BE7F46;
@@ -87,20 +94,24 @@ input[name="login"]:hover {
     animation: loginAni 0.7s 0s infinite
 }
 
-@keyframes loginAni{
-    0%{
+@keyframes loginAni {
+    0% {
         background: dodgerblue;
     }
-    25%{
+
+    25% {
         background: #17DBD8;
     }
-    50%{
+
+    50% {
         background: #00D99F;
     }
-    75%{
+
+    75% {
         background: #00A9D9;
     }
-    100%{
+
+    100% {
         background: dodgerblue;
     }
 }
@@ -129,23 +140,23 @@ input[name="login"]:hover {
 
 }
 
-.load_list{
+.load_list {
     margin-top: 5px;
     height: 90px;
     float: left;
 }
 
-#load_info{
+#load_info {
     color: white;
     font-size: 27px;
     font-weight: 600;
 }
 
-.r_name{
+.r_name {
     font-weight: 500;
 }
 
-.room{
+.room {
     cursor: pointer;
     display: inline-block;
     width: 70px;
@@ -159,35 +170,35 @@ input[name="login"]:hover {
     border-radius: 10px;
 }
 
-.room:hover{
-    background-color: dodgerblue;
+.room:hover {
+    background-color: cornflowerblue;
 }
 
-#load_msg{
+#load_msg {
     margin-bottom: -30px;
 }
 
-.chDiv{
+.chDiv {
     color: white;
 }
 
-input[type="radio"]{
+input[type="radio"] {
     display: none;
 }
 
-input[type="radio"]:checked + div{
+input[type="radio"]:checked + div {
     display: inline-block;
     background: dodgerblue;
 }
 
-.copyright{
+.copyright {
     margin-top: 5px;
 }
 
-.copyBt{
+.copyBt {
     cursor: pointer;
     background: inherit;
-    color: #c67b32;
+    color: orange;
     border-style: none;
     border-radius: 5px;
     font-family: inherit;
@@ -196,77 +207,77 @@ input[type="radio"]:checked + div{
     padding: 0.2rem 0.5rem;
 }
 
-.copyBt:hover{
+.copyBt:hover {
     background: #c67b32;
     color: white;
 }
 
-.helpbox{
+.helpbox {
     color: black;
 }
 
-#lobby{
+#lobby {
     background: orange;
     padding: 0.2rem 0.7rem;
     border-radius: 10px;
     color: black;
     font-size: 16px;
     font-weight: 500;
-    margin-right: 110px;
+    margin-right: 100px;
 }
 
-#lobbycnt{
+#lobbycnt {
     font-weight: 800;
 }
 
-.helpboxTop{
+.helpboxTop {
     background: dodgerblue;
     font-size: 20px;
     font-weight: 500;
     padding: 0.4rem;
 }
 
-.helpTop{
+.helpTop {
     margin-left: 50px;
 }
 
-.closeTop{
+.closeTop {
     cursor: pointer;
     float: right;
     font-size: 18px;
     padding: 2px 0.5rem;
     border-radius: 10px;
     display: inline-block;
-    background: crimson;    
+    background: crimson;
 }
 
-.closeTop:hover{
+.closeTop:hover {
     background: white;
     color: black;
 }
 
-.helpboxBottom{
+.helpboxBottom {
     color: black;
 }
 
-.helpUl{
+.helpUl {
     text-align: left;
     margin-top: 0px;
     font-size: 22px;
     font-weight: 400;
 }
 
-.helpUl li{
+.helpUl li {
     list-style-type: square;
 }
 
-.boxTitle{
+.boxTitle {
     font-size: 20px;
     font-weight: 500;
     color: dodgerblue;
 }
 
-a{
+a {
     padding: 0rem 0.3rem;
     margin-right: 5px;
     text-decoration: none;
@@ -275,9 +286,10 @@ a{
     border-radius: 5px;
 }
 
-a:hover{
+a:hover {
     background: black;
 }
+
 /*GAME.HTML*/
 
 .menulist {
@@ -288,7 +300,7 @@ a:hover{
     background: white;
     display: inline-block;
     width: 770px;
-    height: 130px;
+    height: 103px;
     padding: 2rem;
     margin-top: 10px;
     border-radius: 10px 10px 0 0;
@@ -297,10 +309,11 @@ a:hover{
 .userchain {
     background: #EEAE73;
     display: inline-block;
-    padding: 1rem;
+    height: 80px;
+    padding: 0.5rem 1rem;
     border-radius: 10px;
     color: #41260E;
-    margin: 10px;
+    margin: 0 10px;
 }
 
 .answer {
@@ -314,12 +327,12 @@ a:hover{
     background: white;
     display: inline-block;
     width: 770px;
-    padding: 2rem;
+    padding: 1rem 2rem;
     border-top: 5px solid #734114;
     border-radius: 0 0 10px 10px;
 }
 
-input{
+input {
     outline: none;
 }
 
@@ -327,23 +340,26 @@ input[name="myanswer"] {
     background: #EEAE73;
     color: #41260E;
     width: 180px;
-    height: 40px;
-    font-size: 45px;
+    height: auto;
+    font-family: inherit;
+    font-size: 40px;
     font-weight: 700;
     text-align: center;
-    padding: 1.3rem 1rem;
+    padding: 0.7rem;
     border-radius: 10px;
     border: 5px solid white;
 }
 
 .userchat {
-    margin-top: 10px;
+    color: black;
+    margin-top: 5px;
     display: inline-block;
     width: 835px;
     border-radius: 0 0 30px 30px;
 }
 
 .userchat_box {
+    color: black;
     background: #ffe6bf;
     height: 180px;
     text-align: left;
@@ -408,7 +424,8 @@ li {
     margin-top: 10px;
 }
 
-.userChar{
+.userChar {
+    color: black;
     background: #ffe6bf;
     margin: 0px 3px 0px 3px;
     border: 3px solid white;
@@ -419,7 +436,7 @@ li {
     height: 90px;
 }
 
-.uicon{
+.uicon {
     margin-top: 5px;
 }
 
@@ -430,19 +447,21 @@ li {
     font-weight: 500;
 }
 
-.usernick{
-    font-size: 18px;
-    font-weight: 400;
+.usernick {
+    font-size: 17px;
+    font-weight: 500;
 }
 
-@keyframes highlightMe{
-    0%{
+@keyframes highlightMe {
+    0% {
         background: white;
     }
-    50%{
+
+    50% {
         background: #fff2a7;
     }
-    100%{
+
+    100% {
         background: white;
     }
 }
