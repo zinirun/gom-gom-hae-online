@@ -8,10 +8,7 @@ body {
     font-size: 30px;
     font-weight: 300;
     color: black;
-    background-color: #60340D;
-    background-image: linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(30deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(150deg, #734114 12%, transparent 12.5%, transparent 87%, #734114 87.5%, #734114), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A), linear-gradient(60deg, #8A582A 25%, transparent 25.5%, transparent 75%, #8A582A 75%, #8A582A);
-    background-position: 0 0, 0 0, 25px 50px, 25px 50px, 0 0, 25px 50px;
-    background-size: 50px 100px;
+    background: #60340D;
 }
 
 span,
@@ -33,15 +30,10 @@ div {
 .mainview {
     display: inline-block;
     background: white;
-    opacity: 0.75;
     padding: 1.5rem 40px 40px 2.5rem;
     margin-top: 190px;
     box-shadow: 0px 0px 20px 10px #986C44;
     border-radius: 20px;
-}
-
-.mainview:hover, .mainview:focus-within{
-    opacity: 1;
 }
 
 .logo {
