@@ -27,7 +27,7 @@
             var timeover = 12000;
 
             if (data.roomId == 5) {
-                timeover = 3000000;
+                timeover = 30000;
             }
 
             $('#m').focus();
@@ -84,7 +84,7 @@
                 }
 
                 //워드체인에 메시지(3글자) 삽입
-                $('#chain').append('<div style="background:' + userColor[(turnCnt-1)%userCnt] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
+                $('#chain').append('<div style="background:' + userColor[(turnCnt - 1) % userCnt] + ';" class="userchain"><div class="answer" id="answer_' + nickname + '">' + answer + '</div><div class="usernick">' + nickname + '</div></div>');
 
                 //게임 진행(다음 턴)
                 keepGame();
@@ -191,19 +191,18 @@
                     }
 
                     $('#m').attr("disabled", false);
-                    $('.mychat').css("animation","highlightMe 1s 0s infinite");
+                    $('.mychat').css("animation", "highlightMe 1s 0s infinite");
                     $('#m').focus();
                     $('#ans_msg').html('나의 ' + turnCnt + '번째 턴!');
-                    
+
                     //첫 단어인 경우 안내
                     if (turnCnt == 1) {
                         $('#ans_msg').html('첫 단어를 입력하세요!');
                     }
-                    
+
                     $('#ans_msg').css('color', 'crimson');
 
-                }
-                else { //내 턴 아닐 때
+                } else { //내 턴 아닐 때
 
                     clearTimer();
 
@@ -211,14 +210,14 @@
                     $('#timeBar').css('width', '210px');
 
                     $('#m').attr("disabled", true);
-                    $('.mychat').css("animation","");
+                    $('.mychat').css("animation", "");
                     $('#c').focus();
                     $('#ans_msg').html(next_nickname + '의 ' + turnCnt + '번째 턴!');
                     $('#ans_msg').css('color', 'green');
                 }
-                
+
                 $('.userChar').css('border-color', 'white');
-                $('.userChar:nth-child('+((turnCnt-1)%userCnt+1)+')').css('border-bottom-color', 'crimson');
+                $('.userChar:nth-child(' + ((turnCnt - 1) % userCnt + 1) + ')').css('border-bottom-color', 'crimson');
             }
 
             function clearTimer() {
@@ -292,7 +291,7 @@
             function refreshUserList(onUser) {
                 $('#userList').empty();
                 for (var i in onUser) {
-                    $('#userList').append('<div class="userChar"style="background: '+userColor[i]+'"><img class="uicon" src="/public/uicon.png" width="60px" height="60px" ><p class="username">'+onUser[i]+'</p></div>');
+                    $('#userList').append('<div class="userChar"style="background: ' + userColor[i] + '"><img class="uicon" src="/public/uicon.png" width="50px" height="50px" ><p class="username">' + onUser[i] + '</p></div>');
                 }
             }
 
@@ -310,41 +309,49 @@
         <div class="menulist">
             <input class="gamebutton" id="logoutBtn" type="button" value="게임에서 나가기" onclick="logout();">
         </div>
-        <div class="gameview">
-            <div id="chain">
-                <!--WORD CHAIN-->
+        <div class="view_wrap" style="height: 167px;">
+            <div class="gameview">
+                <div id="chain">
+                    <!--WORD CHAIN-->
+                </div>
             </div>
         </div>
-        <br />
-        <div class="mychat">
-            <div class="text_info">
-                <p id="ans_msg">첫 단어를 입력하세요!</p>
-                <div id="timeBar"></div>
-            </div>
-            <form id="ansForm" action="">
-                <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
-            </form>
 
-            <!--단어오류 메시지-->
-            <span class="text_answer_info"></span>
+        <div class="view_wrap">
+            <div class="mychat">
 
-            <div class="text_info" style="margin-top: 10px;">
-                [채널 <%= roomId %>] 게임중인 유저
-            </div>
-            <div id="userList">
-                <!--유저 캐릭터-->
-            </div>
-        </div><br>
+                <div class="answerDiv">
+                    <div class="text_info">
+                        <p id="ans_msg">첫 단어를 입력하세요!</p>
+                        <div id="timeBar"></div>
+                    </div>
+                    <form id="ansForm" action="">
+                        <input id="m" type="text" name="myanswer" maxlength="3" autocomplete="off">
+                    </form>
 
-        <div class="userchat">
-            <div class="userchat_box">
-                <ul id="chatlog">
-                    <li><b>채팅 기록은 서버에 저장됩니다. 바른 말을 사용하여 주세요!</b></li>
-                </ul>
+                    <!--단어오류 메시지-->
+                    <span class="text_answer_info"></span>
+
+                    <div class="text_info" style="margin-top: 10px; font-size: 16px;">
+                        [채널 <%= roomId %>] 게임중인 유저
+                    </div>
+                    <div id="userList">
+                        <!--유저 캐릭터-->
+                    </div>
+                </div>
+
+                <div class="userchat">
+                    <div class="userchat_box">
+                        <ul id="chatlog">
+                            <li><b>채팅 기록은 서버에 저장됩니다. 바른 말을 사용하여 주세요!</b></li>
+                        </ul>
+                    </div>
+                    <form id="chatForm" action="" style="margin-top: -3px;float: left;">
+                        <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
+                    </form>
+                </div>
+
             </div>
-            <form id="chatForm" action="" style="margin-top: -3px;float: left;">
-                <input id="c" type="text" name="mychatting" maxlength="40" autocomplete="off" placeholder="채팅 내용을 입력하세요.">
-            </form>
         </div>
     </div>
 
