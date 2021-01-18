@@ -16,8 +16,8 @@ class App {
         this.app = express();
         this.port = parseInt(process.env.PORT) || 4000;
         this.setViewEngine();
-        this.setMiddlewares();
         this.setStatic();
+        this.setMiddlewares();
         this.initializeControllers(controllers);
         this.setErrorHandler();
     }
@@ -53,7 +53,7 @@ class App {
     }
 
     private setStatic() {
-        this.app.use('/public', express.static(__dirname + '/public'));
+        this.app.use('/public', express.static(__dirname + '/../../public'));
     }
 
     private initializeControllers(controllers: Controller[]) {

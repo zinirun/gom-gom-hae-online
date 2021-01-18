@@ -1,9 +1,9 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 
-function authMiddleware(req: Request, res: Response, next: NextFunction) {
+function authMiddleware(req: any, res: Response, next: NextFunction) {
     if (req.session.user) {
-        res.render('index.html');
-    } else next();
+        next();
+    } else res.render('index.html');
 }
 
 export default authMiddleware;
