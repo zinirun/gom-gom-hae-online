@@ -1,36 +1,11 @@
 {
-  "name": "bearchain",
-  "version": "1.0.0",
-  "description": "BearChain Game by DKU zini",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": ""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "ejs": "^3.0.1",
-    "errorhandler": "^1.5.1",
-    "express": "^4.17.1",
-    "express-error-handler": "^1.1.0",
-    "express-session": "^1.17.0",
-    "forever": "^2.0.0",
-    "fs": "0.0.1-security",
-    "hangul-js": "^0.2.6",
-    "hangul-tools": "^0.1.4",
-    "http": "0.0.0",
-    "mongodb": "^3.5.4",
-    "mysql": "^2.18.1",
-    "path": "^0.12.7",
-    "serve-static": "^1.14.1",
-    "socket.io": "^2.3.0",
-    "url": "^0.11.0"
+  "name": "bearchain-new",
+  "version": "1.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/zinirun/bearchain.git",
+  "author": "zinirun <heojj97@naver.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.1.3"
   }
 }
