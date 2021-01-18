@@ -5,13 +5,15 @@ import * as cookieParser from 'cookie-parser';
 import * as logger from 'morgan';
 import * as helmet from 'helmet';
 import * as hpp from 'hpp';
+import Controller from '../interfaces/controller.interface';
 
 class App {
     public app: express.Application;
-    constructor() {
+
+    constructor(controllers: Controller[]) {
         this.app = express();
         this.setMiddleware();
-        this.getRouting();
+        this.initializeControllers(controllers);
     }
 
     public listen() {
@@ -30,8 +32,10 @@ class App {
         this.app.use(cors());
     }
 
-    getRouting() {
-        this.app.use(require('./controllers'));
+    private initializeControllers(controllers: Controller[]) {
+        controllers.forEach((controller) => {
+            this.app.use('/', controller.router);
+        });
     }
 }
 

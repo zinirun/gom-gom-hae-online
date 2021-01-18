@@ -9,8 +9,10 @@ class GameController implements Controller {
     }
 
     private initializeRoutes() {
-        this.router.get(`${this.path}/`, this.getUserById);
+        //this.router.get(`${this.path}/`, this.getUserById);
     }
 
-    private getUserById = async (req: Request, res: Response, next: NextFunction) => {};
+    //private getUserById = async (req: Request, res: Response, next: NextFunction) => {};
 }
+
+export default GameController;
