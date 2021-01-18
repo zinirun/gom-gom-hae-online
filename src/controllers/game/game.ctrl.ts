@@ -1,8 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import Controller from '../interfaces/controller.interface';
+import Controller from '../../interfaces/controller.interface';
 
 class GameController implements Controller {
-    public path = '/process';
+    public path = '/game';
     public router = Router();
     constructor() {
         this.initializeRoutes();
