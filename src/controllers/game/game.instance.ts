@@ -8,4 +8,8 @@ class GameInstance {
     private lobbyUserCnt = 0;
 
     constructor() {}
+
+    get;
 }
+
+export default GameInstance;

@@ -1,11 +1,15 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import Controller from '../../interfaces/controller.interface';
+import GameInstance from './game.instance'
 
 class GameController implements Controller {
     public path = '/game';
     public router = Router();
+    private game;
     constructor() {
+        // 게임컨트롤러에서 게임인스턴스 초기화
         this.initializeRoutes();
+        this.game = new GameInstance();
     }
 
     private initializeRoutes() {
@@ -39,14 +43,13 @@ class GameController implements Controller {
     } else {
         //ID 조건 만족 시 입장
         req.session.user = {
-            id: userId,
-            room: roomId,
+            uid: userId,
+            rid: roomId,
             authorized: true
         };
         res.render('game.html', {
-
-            userId: req.session.user.id,
-            roomId: req.session.user.room
+            userId,
+            roomId,
         });
     }
     };
