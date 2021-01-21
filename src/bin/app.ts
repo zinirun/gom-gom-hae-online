@@ -64,11 +64,11 @@ class App {
 
     private setErrorHandler() {
         this.app.use((req, res, _) => {
-            res.status(404).render('404.html');
+            res.status(404).render('404.ejs');
         });
 
         this.app.use((err, req, res, _) => {
-            res.status(500).render('404.html');
+            res.status(500).render('404.ejs');
         });
     }
 }
