@@ -27,14 +27,14 @@ class GameController implements Controller {
                     uid,
                     rid,
                 };
-                res.render('game.html', {
+                res.render('game.ejs', {
                     userId: uid,
                     roomId: rid,
                 });
             })
             .catch((error: joinGameResult) => {
                 const { message } = error;
-                res.render('index.html', {
+                res.render('index.ejs', {
                     msg: message,
                 });
             });
