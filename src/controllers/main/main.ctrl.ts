@@ -1,4 +1,4 @@
-import { Router, Response, NextFunction } from 'express';
+import { Router, Response } from 'express';
 import authMiddleware from '../../middlewares/auth.middleware';
 import Controller from '../../interfaces/controller.interface';
 
@@ -13,7 +13,7 @@ class MainController implements Controller {
         this.router.get(`${this.path}`, authMiddleware, this.getMain);
     }
 
-    private getMain = (req: any, res: Response, next: NextFunction) => {
+    private getMain = (req: any, res: Response) => {
         const { rid, uid } = req.session.user;
         res.render('index.html', {
             ch1: rid == 1 && 'checked',
