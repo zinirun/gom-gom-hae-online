@@ -11,6 +11,7 @@ class MainController implements Controller {
 
     private initializeRoutes() {
         this.router.get(`${this.path}`, authMiddleware, this.getMain);
+        this.router.get(`${this.path}logout`, authMiddleware, this.getLogout);
     }
 
     private getMain = (req: any, res: Response) => {
@@ -23,6 +24,16 @@ class MainController implements Controller {
             ch5: rid == 5 && 'checked',
             uid,
             msg: `${uid}님, 플레이만 누르시면 됩니다!`,
+        });
+    };
+
+    private getLogout = (req: any, res: Response) => {
+        req.session.destroy((err) => {
+            if (err) res.redirect('/');
+            else
+                res.render('index.ejs', {
+                    msg: '로그아웃 되었습니다.',
+                });
         });
     };
 }

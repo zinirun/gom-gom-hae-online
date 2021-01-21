@@ -15,6 +15,15 @@ class GameController implements Controller {
 
     private initializeRoutes() {
         this.router.post(`${this.path}`, this.postStartGame);
+        this.router.get(`${this.path}`, (_, res: Response) =>
+            res.render('index.ejs', { msg: '잘못된 접근입니다. 다시 접속하세요.' }),
+        );
+        this.router.get(`${this.path}/winner`, (req: any, res: Response) =>
+            res.render('index.ejs', { win: req.session.user.userId }),
+        );
+        this.router.get(`${this.path}/loser`, (req: any, res: Response) =>
+            res.render('index.ejs', { lose: req.session.user.userId }),
+        );
     }
 
     private postStartGame = async (req: any, res: Response) => {
