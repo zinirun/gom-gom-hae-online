@@ -18,7 +18,7 @@ $(function () {
     $('#ansForm').submit(function () {
         if ($('#m').val() != '') {
             var ansData = $('#m').val();
-            socket.emit('answer', ansData, data.userId);
+            socket.emit('answer', data, ansData);
             $('#m').val('');
         }
         return false;

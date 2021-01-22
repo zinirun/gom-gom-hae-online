@@ -39,21 +39,53 @@ class App {
             console.log(`Socket.io server started`);
 
             socket.on('join-game', (data: any) => {
-                const userId: string = data.userId;
-                const roomId: number = data.roomId;
+                const { roomId, userId } = data;
 
                 socket.join(roomId);
-                this.game.joinSocket(roomId, userId);
+                this.game.joinSocket(roomId, userId, socket.id);
+
+                this.io.sockets.in(roomId).emit('newUser', userId);
+                this.io.sockets.in(roomId).emit('refreshUser', this.game.onUsers[roomId], 1);
             });
 
             socket.on('new-game', (data: any): void => {
                 this.game.resetRoomWord(data.roomId);
-                io.sockets.in(room).emit('newUser', user);
-                io.sockets.in(room).emit('refreshUser', onUser[room], 1);
             });
 
-            socket.on('answer', async (msg: string): void => {
-                this.game.pushAnswer;
+            socket.on('answer', async (data: any, word: string) => {
+                const { roomId, userId } = data;
+                await this.game
+                    .pushAnswer(userId, roomId, word)
+                    .then((result) => {
+                        const { myCount, displayWord } = result;
+                        this.io.sockets
+                            .in(roomId)
+                            .emit('answer', userId, word, myCount, displayWord);
+                    })
+                    .catch((errorMsg) =>
+                        this.io.sockets.in(roomId).emit('notice', userId, errorMsg),
+                    );
+            });
+
+            socket.on('chat', (data: any, msg: string): void => {
+                const { userId, roomId } = data;
+                this.io.sockets.in(roomId).emit('chatmsg', userId, msg);
+            });
+
+            socket.on('gg', (data: any, whodie: string) => {
+                const { roomId } = data;
+                const remainUsers = this.game.quitUser(roomId, whodie);
+                this.io.sockets.in(roomId).emit('gameover', whodie);
+                this.io.sockets.in(roomId).emit('keepgame', remainUsers);
+            });
+
+            socket.on('disconnect', (socket: any) => {
+                console.log(`[socket] disconnected ${socket.id}`);
+                if (!socket.id) return;
+                const { roomId, userId } = this.game.findBySocketId(socket.id);
+                const remainUsers = this.game.quitUser(roomId, userId);
+                this.io.sockets.in(roomId).emit('logout', userId);
+                this.io.sockets.in(roomId).emit('refreshUser', remainUsers, 0);
             });
         });
     }
