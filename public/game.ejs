@@ -3,10 +3,10 @@
     <head>
         <title>곰곰해 :: BearChain</title>
         <script>
-            var data = {};
-            //USER's DATA
-            data.roomId = '<%= roomId %>';
-            data.userId = '<%= userId %>';
+            const data = {
+                roomId: '<%= roomId %>',
+                userId: '<%= userId %>'
+            };
         </script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.js"></script>

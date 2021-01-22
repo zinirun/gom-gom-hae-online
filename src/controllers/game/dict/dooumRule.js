@@ -165,4 +165,4 @@ function dooumRule(word, userWord, room, wordCnt) {
     return d_word;
 }
 
-module.exports.dooum = dooumRule;
+module.exports = dooumRule;

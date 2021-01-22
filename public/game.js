@@ -6,18 +6,13 @@ var socketId = '';
 var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
 
 $(function () {
-    var timeover = 12000;
+    const socket = io();
 
-    if (data.roomId == 5) {
-        timeover = 30000;
-    }
+    const timeover = data.roomId == 5 ? 30000 : 12000;
 
     $('#m').focus();
 
-    //socket io
-    var socket = io();
-
-    socket.emit('join', data);
+    socket.emit('join-game', data);
 
     //단어 입력시
     $('#ansForm').submit(function () {
@@ -94,7 +89,7 @@ $(function () {
     socket.on('winner', function (win) {
         //최종 승리자(1명) 출력, winner 라우터 이동
         if (win == data.userId) {
-            socket.emit('newgame');
+            socket.emit('new-game', data);
             window.location.href = '/process/winner';
         }
     });
@@ -132,7 +127,7 @@ $(function () {
 
     //유저 변화, 새로운 게임 시작
     function newGame() {
-        socket.emit('newgame');
+        socket.emit('new-game', data);
         turnCnt = 0;
 
         keepGame();
@@ -260,7 +255,7 @@ $(function () {
                 );
                 $('.userchat_box').scrollTop($('.userchat_box')[0].scrollHeight);
 
-                newGame(onUserList);
+                newGame();
             }
         }
     });

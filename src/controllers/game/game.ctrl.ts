@@ -6,7 +6,7 @@ import joinGameResult from '../../interfaces/joinGameResult.interface';
 class GameController implements Controller {
     public path = '/game';
     public router = Router();
-    private game;
+    public game;
     constructor() {
         // 게임컨트롤러에서 게임인스턴스 초기화
         this.initializeRoutes();
@@ -30,7 +30,7 @@ class GameController implements Controller {
         const uid = req.body.nickname;
         const rid = req.body.ch;
         await this.game
-            .joinGame(uid, rid)
+            .enterGame(uid, rid)
             .then(() => {
                 req.session.user = {
                     uid,

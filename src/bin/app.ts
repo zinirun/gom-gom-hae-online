@@ -13,6 +13,7 @@ class App {
     private readonly port: number = parseInt(process.env.PORT) || 4000;
     public app: express.Application;
     private server: http.Server;
+    private game: any;
     private io: SocketIO.Server;
 
     constructor(controllers: Controller[]) {
@@ -24,11 +25,36 @@ class App {
         this.setMiddlewares();
         this.initializeControllers(controllers);
         this.setErrorHandler();
+        this.listenSocketActions();
     }
 
     public listen() {
         this.server.listen(this.port, () => {
             console.log(`Server started : ${this.port}`);
+        });
+    }
+
+    private listenSocketActions() {
+        this.io.on('connection', (socket: any) => {
+            console.log(`Socket.io server started`);
+
+            socket.on('join-game', (data: any) => {
+                const userId: string = data.userId;
+                const roomId: number = data.roomId;
+
+                socket.join(roomId);
+                this.game.joinSocket(roomId, userId);
+            });
+
+            socket.on('new-game', (data: any): void => {
+                this.game.resetRoomWord(data.roomId);
+                io.sockets.in(room).emit('newUser', user);
+                io.sockets.in(room).emit('refreshUser', onUser[room], 1);
+            });
+
+            socket.on('answer', async (msg: string): void => {
+                this.game.pushAnswer;
+            });
         });
     }
 
@@ -71,6 +97,9 @@ class App {
     private initializeControllers(controllers: Controller[]) {
         controllers.forEach((controller) => {
             this.app.use('/', controller.router);
+            if (controller.game) {
+                this.game = controller.game;
+            }
         });
     }
 

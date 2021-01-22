@@ -1,19 +1,26 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
+import roomUser from '../../interfaces/roomUser.interface';
+import * as fs from 'fs';
 import * as socketIO from 'socket.io';
 
 class GameInstance {
-    private MAX_USER = 5;
-    private onUser = [];
-    //private userCnt = []; //room별 user count -> onUser에 합쳐도 됨
-    private userWord = []; //room 별 userword data
-    private wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
-    private mainroom = 0;
-    private lobbyUserCnt = 0;
-    private io;
+    private readonly MAX_CHANNEL: number = 5;
+    private readonly MAX_USER: number = 5;
+    public onUsers: roomUser[][] = [];
+    public onWords: string[][] = [];
+    private dict;
+    private dooum;
 
-    constructor() {}
+    constructor() {
+        for (let i = 0; i < this.MAX_CHANNEL; i++) {
+            this.onUsers.push([]);
+            this.onWords.push([]);
+        }
+        this.dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, '').split('\n');
+        this.dooum = require('./dooumRule');
+    }
 
-    public joinGame(userId: string, roomId: number): Promise<joinGameResult> {
+    public enterGame(userId: string, roomId: number): Promise<joinGameResult> {
         const failException = {
             success: false,
             userId,
@@ -45,15 +52,34 @@ class GameInstance {
         });
     }
 
+    public joinSocket(roomId: number, userId: string): void {
+        console.log(`[socket] joined user ${userId} to room ${roomId}`);
+
+        this.onUsers[roomId].push({
+            userId,
+            myCount: 0,
+        });
+
+        console.log(this.onUsers);
+    }
+
+    public resetRoomWord(roomId): void {
+        this.onWords[roomId].length = 0;
+    }
+
+    public pushAnswer(roomId, word): Promise<void> {
+        return new Promise((resolve, reject) => {});
+    }
+
     private isChannelNotFull(roomId: number): boolean {
-        if (this.onUser[roomId] && this.onUser[roomId].length >= this.MAX_USER) {
+        if (this.onUsers[roomId] && this.onUsers[roomId].length >= this.MAX_USER) {
             return false;
         } else return true;
     }
 
     private isUserIdValid(userId: string): boolean {
-        this.onUser.forEach((userOfEachRoom) =>
-            userOfEachRoom.forEach((user) => user === userId && false),
+        this.onUsers.forEach((userOfEachRoom) =>
+            userOfEachRoom.forEach((user) => user.userId === userId && false),
         );
         return true;
     }
