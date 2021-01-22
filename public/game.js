@@ -28,7 +28,7 @@ $(function () {
     $('#chatForm').submit(function () {
         if ($('#c').val() != '') {
             var chatData = $('#c').val();
-            socket.emit('chat', chatData, data.userId);
+            socket.emit('chat', data, chatData);
             $('#c').val('');
         }
         return false;
@@ -111,7 +111,7 @@ $(function () {
         $('#timeBar').css('width', timebarPx + 'px');
 
         if (viewtime < 10) {
-            socket.emit('gg', curUser);
+            socket.emit('gg', data, curUser);
             getout(curUser); //타임오버 대상 게임오버
         } else if (viewtime < 10 && curUser != data.userId) {
             if (!curUser) {
