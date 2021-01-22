@@ -1,4 +1,5 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
+import * as socketIO from 'socket.io';
 
 class GameInstance {
     private MAX_USER = 5;
@@ -8,6 +9,7 @@ class GameInstance {
     private wordCnt = []; //room 별 word 개수 (첫번째는 3글자인지만 체크)
     private mainroom = 0;
     private lobbyUserCnt = 0;
+    private io;
 
     constructor() {}
 

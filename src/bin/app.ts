@@ -4,17 +4,21 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as logger from 'morgan';
 import * as expressSession from 'express-session';
+import * as http from 'http';
 import * as helmet from 'helmet';
 import * as hpp from 'hpp';
 import Controller from '../interfaces/controller.interface';
 
 class App {
+    private readonly port: number = parseInt(process.env.PORT) || 4000;
     public app: express.Application;
-    private port: number;
+    private server: http.Server;
+    private io: SocketIO.Server;
 
     constructor(controllers: Controller[]) {
         this.app = express();
-        this.port = parseInt(process.env.PORT) || 4000;
+        this.createServer();
+        this.setSockets();
         this.setViewEngine();
         this.setStatic();
         this.setMiddlewares();
@@ -23,9 +27,13 @@ class App {
     }
 
     public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Express started at port ${this.port}`);
+        this.server.listen(this.port, () => {
+            console.log(`Server started : ${this.port}`);
         });
+    }
+
+    private createServer() {
+        this.server = http.createServer(this.app);
     }
 
     private setMiddlewares() {
@@ -44,6 +52,10 @@ class App {
         );
         this.app.use('/public', express.static(__dirname + '/../../public'));
         this.app.use(cors());
+    }
+
+    private setSockets() {
+        this.io = require('socket.io')(this.server);
     }
 
     private setViewEngine() {
