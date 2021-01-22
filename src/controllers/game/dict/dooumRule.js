@@ -1,9 +1,9 @@
-function dooumRule(word, userWord, room, wordCnt) {
+function dooumRule(word, roomWord) {
     //두음법칙 적용위한 disassemble -> assemble
-    var d_word = '';
-    if (userWord[room].length > 0) {
-        var prevWord = userWord[room][wordCnt[room] - 1];
-        var prevWordFinal = prevWord.slice(-1);
+    let d_word = '';
+    if (roomWord.length > 0) {
+        const prevWord = roomWord[roomWord.length - 1];
+        const prevWordFinal = prevWord.slice(-1);
 
         if (prevWordFinal == '라') {
             d_word = prevWord.slice(0, -1) + '나';
@@ -165,4 +165,4 @@ function dooumRule(word, userWord, room, wordCnt) {
     return d_word;
 }
 
-module.exports = dooumRule;
+export default dooumRule;

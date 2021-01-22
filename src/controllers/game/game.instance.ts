@@ -1,23 +1,27 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
 import roomUser from '../../interfaces/roomUser.interface';
+import dooum from './dict/dooumRule';
 import * as fs from 'fs';
 import * as socketIO from 'socket.io';
 
 class GameInstance {
     private readonly MAX_CHANNEL: number = 5;
     private readonly MAX_USER: number = 5;
-    public onUsers: roomUser[][] = [];
-    public onWords: string[][] = [];
+    public filterOnlyUserId = (roomArray): [] => roomArray.map((r) => r.userId);
+    private onUsers: roomUser[][] = [];
+    private onWords: string[][] = [];
     private dict;
-    private dooum;
 
     constructor() {
         for (let i = 0; i < this.MAX_CHANNEL; i++) {
             this.onUsers.push([]);
             this.onWords.push([]);
         }
-        this.dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, '').split('\n');
-        this.dooum = require('./dooumRule');
+        this.dict = fs
+            .readFileSync(`${__dirname}/dict/dict.txt`)
+            .toString()
+            .replace(/\r/g, '')
+            .split('\n');
     }
 
     public enterGame(userId: string, roomId: number): Promise<joinGameResult> {
@@ -52,7 +56,7 @@ class GameInstance {
         });
     }
 
-    public joinSocket(roomId: number, userId: string, socketId: string): void {
+    public joinSocket(roomId: number, userId: string, socketId: string): string[] {
         console.log(`[socket] joined user ${userId} to room ${roomId}`);
 
         this.onUsers[roomId].push({
@@ -62,17 +66,19 @@ class GameInstance {
             myCount: this.onUsers[roomId].length,
         });
 
-        console.log(this.onUsers);
+        return this.filterOnlyUserId(this.onUsers[roomId]);
     }
 
     public pushAnswer(userId, roomId, word): Promise<any> {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const { myCount } = this.onUsers[roomId].find((u) => u.userId === userId);
-            const wordStatus = this.checkAnswer(roomId, word);
+            const wordStatus = await this.checkAnswer(roomId, word);
             if (wordStatus === 0) {
+                this.onWords[roomId].push(word);
                 const roomWord = this.onWords[roomId];
                 const wordCount = roomWord.length;
-                const alsoWord = this.dooum(word, this.onWords, roomId, wordCount);
+                const alsoWord = dooum(word, this.onWords[roomId]);
+                console.log(roomWord, wordCount, alsoWord);
                 let displayWord;
                 if (alsoWord) {
                     displayWord = `${roomWord[wordCount - 1].slice(-1)}(${alsoWord.slice(-1)})`;
@@ -101,15 +107,15 @@ class GameInstance {
         });
     }
 
-    public quitUser(roomId, userId): roomUser[] {
+    public quitUser(roomId, userId): string[] {
         this.onUsers[roomId] = this.onUsers[roomId].filter((u) => u.userId !== userId);
         if (this.onUsers[roomId].length <= 1) {
             this.resetRoomWord(roomId);
         }
-        return this.onUsers[roomId];
+        return this.filterOnlyUserId(this.onUsers[roomId]);
     }
 
-    public findBySocketId(socketId): roomUser | any {
+    public findBySocketId(socketId: string): roomUser | any {
         for (let roomUser of this.onUsers) {
             const target = roomUser.find((u) => u.socketId === socketId);
             if (target) {
@@ -122,43 +128,49 @@ class GameInstance {
         this.onWords[roomId].length = 0;
     }
 
-    private checkAnswer(roomId, word): number {
-        let status = 0;
-        const cnt = this.onWords[roomId].length;
-        if (word.length !== 3) {
-            status = 1;
-        } else if (!this.isAnswerUsed(roomId, word)) {
-            status = 2;
-        } else if (cnt > 0 && !this.isAnswerFinalWord(roomId, word)) {
-            status = 3;
-        } else if (!this.isAnswerInDict(word)) {
-            status = 4;
-        }
-        return status;
+    private checkAnswer(roomId, word): Promise<number> {
+        return new Promise<number>(async (resolve) => {
+            let status = 0;
+            const cnt = this.onWords[roomId].length;
+            if (word.length !== 3) {
+                status = 1;
+            } else if (this.isAnswerUsed(roomId, word)) {
+                status = 2;
+            } else if (cnt > 0 && !(await this.isAnswerFinalWord(roomId, word))) {
+                status = 3;
+            } else if (!(await this.isAnswerInDict(word))) {
+                status = 4;
+            }
+            resolve(status);
+        });
     }
 
-    private isAnswerInDict(word): boolean {
-        return this.dict.find((d) => d === word) ? true : false;
+    private isAnswerInDict(word): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            resolve(this.dict.find((d) => d === word) ? true : false);
+        });
     }
 
-    private isAnswerFinalWord(roomId, word): boolean {
-        let status = false;
-        const roomWord = this.onWords[roomId];
-        const wordCount = roomWord.length;
-        const alsoWord = this.dooum(word, this.onWords, roomId, wordCount);
-        if (alsoWord) {
-            if (alsoWord.slice(-1) === word.charAt(0)) {
-                status = true;
+    private isAnswerFinalWord(roomId, word): Promise<boolean> {
+        return new Promise<boolean>((resolve) => {
+            let status = false;
+            const roomWord = this.onWords[roomId];
+            const wordCount = roomWord.length;
+            const alsoWord = dooum(word, this.onWords[roomId]);
+            if (alsoWord) {
+                if (alsoWord.slice(-1) === word.charAt(0)) {
+                    status = true;
+                }
+                if (roomWord[wordCount - 1].slice(-1) === word.charAt(0)) {
+                    status = true;
+                }
+            } else {
+                if (roomWord[wordCount - 1].slice(-1) === word.charAt(0)) {
+                    status = true;
+                }
             }
-            if (roomWord[wordCount - 1].slice(-1) === word.charAt(0)) {
-                status = true;
-            }
-        } else {
-            if (roomWord[wordCount - 1].slice(-1) === word.charAt(0)) {
-                status = true;
-            }
-        }
-        return status;
+            resolve(status);
+        });
     }
 
     private isAnswerUsed(roomId, word): boolean {

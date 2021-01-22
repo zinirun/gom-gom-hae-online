@@ -12,6 +12,7 @@ $(function () {
 
     $('#m').focus();
 
+    console.log(data);
     socket.emit('join-game', data);
 
     //단어 입력시
