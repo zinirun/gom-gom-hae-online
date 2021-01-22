@@ -16,7 +16,7 @@ class MainController implements Controller {
 
     private getMain = (req: any, res: Response) => {
         const { rid, uid } = req.session.user;
-        res.render('index.html', {
+        res.render('index.ejs', {
             ch1: rid == 1 && 'checked',
             ch2: rid == 2 && 'checked',
             ch3: rid == 3 && 'checked',

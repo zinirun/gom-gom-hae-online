@@ -1,4 +1,5 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
+import authMiddleware from '../../middlewares/auth.middleware';
 import Controller from '../../interfaces/controller.interface';
 import GameInstance from './game.instance';
 import joinGameResult from '../../interfaces/joinGameResult.interface';
@@ -18,12 +19,12 @@ class GameController implements Controller {
         this.router.get(`${this.path}`, (_, res: Response) =>
             res.render('index.ejs', { msg: '잘못된 접근입니다. 다시 접속하세요.' }),
         );
-        this.router.get(`${this.path}/winner`, (req: any, res: Response) =>
-            res.render('index.ejs', { win: req.session.user.userId }),
+        this.router.get(`${this.path}/winner`, authMiddleware, (req: any, res: Response) =>
+            res.render('index.ejs', { win: req.session.user.uid }),
         );
-        this.router.get(`${this.path}/loser`, (req: any, res: Response) =>
-            res.render('index.ejs', { lose: req.session.user.userId }),
-        );
+        this.router.get(`${this.path}/loser`, authMiddleware, (req: any, res: Response) => {
+            res.render('index.ejs', { lose: req.session.user.uid });
+        });
     }
 
     private postStartGame = async (req: any, res: Response) => {

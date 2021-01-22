@@ -91,7 +91,7 @@ $(function () {
         //최종 승리자(1명) 출력, winner 라우터 이동
         if (win == data.userId) {
             socket.emit('new-game', data);
-            window.location.href = '/process/winner';
+            window.location.href = '/game/winner';
         }
     });
 
@@ -225,7 +225,7 @@ $(function () {
     //게임오버 - 퇴장
     function getout(gguser) {
         if (gguser == data.userId) {
-            window.location.href = '/process/loser';
+            window.location.href = '/game/loser';
         }
     }
 

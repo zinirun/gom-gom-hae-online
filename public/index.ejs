@@ -9,17 +9,16 @@
         <link rel="stylesheet" type="text/css" href="/public/style.css" />
 
         <script>
-            var win = '<%if(locals.win){%><%=win%><%}else{0}%>';
-            var lose = '<%if(locals.lose){%><%=lose%><%}else{0}%>';
+            const win = '<%if(locals.win){%><%=win%><%}%>';
+            const lose = '<%if(locals.lose){%><%=lose%><%}%>';
 
             var person = new Array(6);
 
             function win_lose_pop() {
-                if (win.length > 1) {
+                if (win) {
                     document.getElementById('hide_win').style.display = 'inline-block';
                 }
-
-                if (lose.length > 1) {
+                if (lose) {
                     document.getElementById('hide_lose').style.display = 'inline-block';
                 }
             }

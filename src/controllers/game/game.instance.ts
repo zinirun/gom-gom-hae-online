@@ -57,7 +57,7 @@ class GameInstance {
     }
 
     public joinSocket(roomId: number, userId: string, socketId: string): string[] {
-        console.log(`[socket] joined user ${userId} to room ${roomId}`);
+        console.log(`[game-instance] joined user ${userId} to room ${roomId}`);
 
         this.onUsers[roomId].push({
             userId,
@@ -78,7 +78,6 @@ class GameInstance {
                 const roomWord = this.onWords[roomId];
                 const wordCount = roomWord.length;
                 const alsoWord = dooum(word, this.onWords[roomId]);
-                console.log(roomWord, wordCount, alsoWord);
                 let displayWord;
                 if (alsoWord) {
                     displayWord = `${roomWord[wordCount - 1].slice(-1)}(${alsoWord.slice(-1)})`;
