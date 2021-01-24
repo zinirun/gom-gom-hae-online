@@ -33,7 +33,7 @@ class GameInstance {
     public leaveLobby(): number {
         const count = --this.lobbyCount;
         if (count <= 0) {
-            this.lobbyCount = 1;
+            this.lobbyCount = 0;
         }
         return this.lobbyCount;
     }

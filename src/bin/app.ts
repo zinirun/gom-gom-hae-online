@@ -95,7 +95,6 @@ class App {
 
             socket.on('gg', (data: any, whodie: string) => {
                 const { roomId } = data;
-                //const remainUsers = this.game.quitUser(roomId, whodie);
                 this.io.sockets.in(roomId.toString()).emit('gameover', whodie);
             });
 
@@ -139,7 +138,6 @@ class App {
                 saveUninitialized: true,
             }),
         );
-        this.app.use('/public', express.static(__dirname + '/../../public'));
         this.app.use(cors());
     }
 
