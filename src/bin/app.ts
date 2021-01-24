@@ -38,6 +38,16 @@ class App {
         this.io.on('connection', (socket: any) => {
             console.log(`[socket] connected : ${socket.id}`);
 
+            socket.on('join-lobby', () => {
+                const LOBBY = this.game.LOBBY;
+                socket.join(LOBBY);
+                const lobbyCount = this.io.sockets.adapter.rooms.lobby
+                    ? this.io.sockets.adapter.rooms.lobby.length
+                    : 1;
+                const inGameUserCounts = this.game.getInGameUserCounts();
+                this.io.sockets.in(LOBBY).emit('counts', inGameUserCounts, lobbyCount);
+            });
+
             socket.on('join-game', (data: any) => {
                 const { roomId, userId } = data;
                 socket.join(roomId.toString());
@@ -78,8 +88,9 @@ class App {
 
             socket.on('disconnect', () => {
                 if (!socket.id) return;
-                const { roomId, userId } = this.game.findBySocketId(socket.id) || null;
-                if (userId && roomId) {
+                const exitedTargetInGame = this.game.findBySocketId(socket.id);
+                if (exitedTargetInGame) {
+                    const { roomId, userId } = exitedTargetInGame;
                     const remainUsers = this.game.quitUser(roomId, userId);
                     this.io.sockets.in(roomId.toString()).emit('logout', userId);
                     this.io.sockets.in(roomId.toString()).emit('keepgame', remainUsers);

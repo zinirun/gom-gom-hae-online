@@ -2,9 +2,9 @@ import joinGameResult from '../../interfaces/joinGameResult.interface';
 import roomUser from '../../interfaces/roomUser.interface';
 import dooum from './dict/dooumRule';
 import * as fs from 'fs';
-import * as socketIO from 'socket.io';
 
 class GameInstance {
+    public readonly LOBBY: string = 'lobby';
     private readonly MAX_CHANNEL: number = 5;
     private readonly MAX_USER: number = 5;
     public filterOnlyUserId = (roomArray): [] => roomArray.map((r) => r.userId);
@@ -22,6 +22,10 @@ class GameInstance {
             .toString()
             .replace(/\r/g, '')
             .split('\n');
+    }
+
+    public getInGameUserCounts(): number[] {
+        return this.onUsers.map((u) => u.length);
     }
 
     public enterGame(userId: string, roomId: number): Promise<joinGameResult> {

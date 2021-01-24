@@ -26,12 +26,10 @@
             $(function () {
                 const socket = io();
 
-                socket.emit('main');
-                socket.on('lobby', function (userlist, lobbycnt) {
+                socket.emit('join-lobby');
+                socket.on('counts', function (userlist, lobbycnt) {
                     for (var i = 1; i <= 5; i++) {
-                        if (userlist[i]) {
-                            person[i] = userlist[i].length;
-                        }
+                        person[i] = userlist[i];
                         $('#p' + i).html(person[i]);
                         $('#d' + i).css('color', 'white');
                         if (person[i] >= 5) {
@@ -127,7 +125,7 @@
                 <div class="finish_box">
                     <div class="win_text">WINNER!</div>
                     <span class="text_info" style="color: dodgerblue; cursor:pointer; font-size: 25px;" onclick="location.href = '/'">다시 게임에 참가하기</span>
-                    <span class="text_info" style="margin: 0 20px;"></span><span class="text_info" style="color: crimson; cursor:pointer; font-size: 25px;" onclick="location.href = '/process/logout'">그만하기</span>
+                    <span class="text_info" style="margin: 0 20px;"></span><span class="text_info" style="color: crimson; cursor:pointer; font-size: 25px;" onclick="location.href = '/logout'">그만하기</span>
                 </div>
             </div>
     
