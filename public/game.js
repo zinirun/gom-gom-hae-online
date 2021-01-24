@@ -1,6 +1,7 @@
 var onUserList = [];
 var prev_onUserList = [];
 var curUser, turnCnt, userCnt;
+let loseFlag = false;
 
 var socketId = '';
 var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
@@ -111,10 +112,18 @@ $(function () {
         $('#timeBar').css('width', timebarPx + 'px');
 
         if (viewtime < 10) {
-            socket.emit('gg', data, curUser);
+            loseFlag = true;
+            if(loseFlag) {
+                socket.emit('gg', data, curUser);
+                loseFlag = false;
+            }
         } else if (viewtime < 10 && curUser != data.userId) {
             if (!curUser) {
-                getout(data.userId); //첫 단어 입력 안하면 게임오버처리
+                loseFlag = true;
+                if(loseFlag) {
+                    socket.emit('gg', data, curUser);
+                    loseFlag = false;
+                }
             }
         } else {
             viewtime -= 100;
@@ -218,13 +227,13 @@ $(function () {
 
     //타 유저에게 게임오버 chatlog 출력
     socket.on('gameover', function (gguser) {
+        getout(gguser);
         $('#chatlog').append(
             '<li style="color:crimson"><b>[' +
                 gguser +
                 ']님 게임 오버! 첫 턴부터 게임을 이어갑니다!</b>',
         );
         $('.userchat_box').scrollTop($('.userchat_box')[0].scrollHeight);
-        getout(gguser);
     });
 
     socket.on('notice', function (nickname, message) {
