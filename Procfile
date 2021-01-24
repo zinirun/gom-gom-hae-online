@@ -1,1 +1,1 @@
-web: forever dist/src/bin/index.js
+web: node dist/src/bin/index.js
