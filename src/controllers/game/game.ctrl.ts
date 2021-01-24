@@ -27,27 +27,29 @@ class GameController implements Controller {
         });
     }
 
-    private postStartGame = async (req: any, res: Response) => {
-        const uid = req.body.nickname;
-        const rid = req.body.ch;
-        await this.game
-            .enterGame(uid, rid)
-            .then(() => {
-                req.session.user = {
-                    uid,
-                    rid,
-                };
-                res.render('game.ejs', {
-                    userId: uid,
-                    roomId: rid,
+    private postStartGame = async (req: any, res: Response): Promise<void> => {
+        return await new Promise(async () => {
+            const uid = req.body.nickname;
+            const rid = req.body.ch;
+            await this.game
+                .enterGame(uid, rid)
+                .then(() => {
+                    req.session.user = {
+                        uid,
+                        rid,
+                    };
+                    res.render('game.ejs', {
+                        userId: uid,
+                        roomId: rid,
+                    });
+                })
+                .catch((error: joinGameResult) => {
+                    const { message } = error;
+                    res.render('index.ejs', {
+                        msg: message,
+                    });
                 });
-            })
-            .catch((error: joinGameResult) => {
-                const { message } = error;
-                res.render('index.ejs', {
-                    msg: message,
-                });
-            });
+        });
     };
 }
 

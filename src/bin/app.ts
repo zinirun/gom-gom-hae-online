@@ -39,22 +39,35 @@ class App {
             console.log(`[socket] connected : ${socket.id}`);
 
             socket.on('join-lobby', () => {
-                const LOBBY = this.game.LOBBY;
+                const LOBBY: string = this.game.LOBBY;
                 socket.join(LOBBY);
-                const lobbyCount = this.io.sockets.adapter.rooms.lobby
-                    ? this.io.sockets.adapter.rooms.lobby.length
-                    : 1;
+                const lobbyCount = this.game.enterLobby();
                 const inGameUserCounts = this.game.getInGameUserCounts();
                 this.io.sockets.in(LOBBY).emit('counts', inGameUserCounts, lobbyCount);
+                console.log(`[socket] lobby joined - L:${lobbyCount} G:[${inGameUserCounts}]`);
             });
 
-            socket.on('join-game', (data: any) => {
-                const { roomId, userId } = data;
-                socket.join(roomId.toString());
-                const remainUsers = this.game.joinSocket(parseInt(roomId), userId, socket.id);
-                this.io.sockets.in(roomId.toString()).emit('newUser', userId);
-                this.io.sockets.in(roomId.toString()).emit('refreshUser', remainUsers, 1);
-            });
+            socket.on(
+                'join-game',
+                async (data: any): Promise<void> => {
+                    return await new Promise(() => {
+                        const { roomId, userId } = data;
+                        socket.join(roomId.toString());
+                        const remainUsers = this.game.joinSocket(
+                            parseInt(roomId),
+                            userId,
+                            socket.id,
+                        );
+                        this.io.sockets.in(roomId.toString()).emit('newUser', userId);
+                        this.io.sockets.in(roomId.toString()).emit('refreshUser', remainUsers, 1);
+
+                        const LOBBY: string = this.game.LOBBY;
+                        const lobbyCount = this.game.getLobbyCount();
+                        const inGameUserCounts = this.game.getInGameUserCounts();
+                        this.io.sockets.in(LOBBY).emit('counts', inGameUserCounts, lobbyCount);
+                    });
+                },
+            );
 
             socket.on('new-game', (data: any): void => {
                 this.game.resetRoomWord(data.roomId);
@@ -98,6 +111,11 @@ class App {
                     console.log(
                         `[socket] disconnected - socket.id: ${socket.id}/ roomId: ${roomId}/ userId: ${userId}`,
                     );
+                } else {
+                    const LOBBY: string = this.game.LOBBY;
+                    const lobbyCount = this.game.leaveLobby();
+                    const inGameUserCounts = this.game.getInGameUserCounts();
+                    this.io.sockets.in(LOBBY).emit('counts', inGameUserCounts, lobbyCount);
                 }
             });
         });

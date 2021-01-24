@@ -10,10 +10,12 @@ class GameInstance {
     public filterOnlyUserId = (roomArray): [] => roomArray.map((r) => r.userId);
     private onUsers: roomUser[][] = [];
     private onWords: string[][] = [];
+    private lobbyCount: number;
     private dict;
 
     constructor() {
-        for (let i = 0; i < this.MAX_CHANNEL; i++) {
+        this.lobbyCount = 0;
+        for (let i = 0; i <= this.MAX_CHANNEL; i++) {
             this.onUsers.push([]);
             this.onWords.push([]);
         }
@@ -26,6 +28,22 @@ class GameInstance {
 
     public getInGameUserCounts(): number[] {
         return this.onUsers.map((u) => u.length);
+    }
+
+    public enterLobby(): number {
+        return ++this.lobbyCount;
+    }
+
+    public leaveLobby(): number {
+        const count = --this.lobbyCount;
+        if (count <= 0) {
+            this.lobbyCount = 1;
+        }
+        return this.lobbyCount;
+    }
+
+    public getLobbyCount(): number {
+        return this.lobbyCount;
     }
 
     public enterGame(userId: string, roomId: number): Promise<joinGameResult> {
@@ -187,9 +205,11 @@ class GameInstance {
     }
 
     private isUserIdValid(userId: string): boolean {
-        this.onUsers.forEach((userOfEachRoom) =>
-            userOfEachRoom.forEach((user) => user.userId === userId && false),
-        );
+        for (let users of this.onUsers) {
+            for (let user of users) {
+                if (user.userId === userId) return false;
+            }
+        }
         return true;
     }
 }
