@@ -1,6 +1,7 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
 import roomUser from '../../interfaces/roomUser.interface';
 import dooum from './tools/dooum';
+import * as path from 'path';
 import * as fs from 'fs';
 
 class GameInstance {
@@ -20,7 +21,7 @@ class GameInstance {
             this.onWords.push([]);
         }
         this.dict = fs
-            .readFileSync(process.env.DICT_PATH, 'utf8')
+            .readFileSync(path.join(__dirname, '/../../../dict/dict.txt'), 'utf8')
             .toString()
             .replace(/\r/g, '')
             .split('\n');
