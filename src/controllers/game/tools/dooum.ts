@@ -1,4 +1,4 @@
-function dooumRule(word, roomWord) {
+function dooumRule(roomWord: string[]): string {
     //두음법칙 적용위한 disassemble -> assemble
     let d_word = '';
     if (roomWord.length > 0) {

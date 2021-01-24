@@ -1,7 +1,6 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
 import roomUser from '../../interfaces/roomUser.interface';
-import dooum from './dict/dooumRule';
-import * as path from 'path';
+import dooum from './tools/dooum';
 import * as fs from 'fs';
 
 class GameInstance {
@@ -21,7 +20,7 @@ class GameInstance {
             this.onWords.push([]);
         }
         this.dict = fs
-            .readFileSync(path.join(__dirname, '/dict/dict.txt'))
+            .readFileSync(process.env.DICT_PATH, 'utf8')
             .toString()
             .replace(/\r/g, '')
             .split('\n');
@@ -100,7 +99,7 @@ class GameInstance {
                 this.onWords[roomId].push(word);
                 const roomWord = this.onWords[roomId];
                 const wordCount = roomWord.length;
-                const alsoWord = dooum(word, this.onWords[roomId]);
+                const alsoWord = dooum(this.onWords[roomId]);
                 let displayWord;
                 if (alsoWord) {
                     displayWord = `${roomWord[wordCount - 1].slice(-1)}(${alsoWord.slice(-1)})`;
@@ -178,7 +177,7 @@ class GameInstance {
             let status = false;
             const roomWord = this.onWords[roomId];
             const wordCount = roomWord.length;
-            const alsoWord = dooum(word, this.onWords[roomId]);
+            const alsoWord = dooum(this.onWords[roomId]);
             if (alsoWord) {
                 if (alsoWord.slice(-1) === word.charAt(0)) {
                     status = true;
