@@ -1,7 +1,6 @@
 var onUserList = [];
 var prev_onUserList = [];
 var curUser, turnCnt, userCnt;
-let loseFlag = false;
 
 var socketId = '';
 var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
@@ -113,7 +112,6 @@ $(function () {
 
         if (viewtime < 10) {
             socket.emit('gg', data, curUser);
-            getout(curUser); //타임오버 대상 게임오버
         } else if (viewtime < 10 && curUser != data.userId) {
             if (!curUser) {
                 getout(data.userId); //첫 단어 입력 안하면 게임오버처리
@@ -128,7 +126,7 @@ $(function () {
     //게임오버시 플래그 변경
     function getout(gguser) {
         if (gguser === data.userId) {
-            loseFlag = true;
+            window.location = '/game/loser'
         }
     }
 
