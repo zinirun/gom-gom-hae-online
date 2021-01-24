@@ -35,18 +35,18 @@ class App {
         });
     }
 
-    private bindSocketActions() {
-        this.io.on('connection', (socket: any) => socketActions(socket, this.io, this.game));
-    }
-
     private createServer() {
         this.server = http.createServer(this.app);
     }
 
+    private bindSocketActions() {
+        this.io.on('connection', (socket: any) => socketActions(socket, this.io, this.game));
+    }
+
     private setMiddlewares() {
-        //this.app.use(helmet());
-        //this.app.use(hpp());
-        this.app.use(logger('dev'));
+        this.app.use(helmet());
+        this.app.use(hpp());
+        this.app.use(logger('combined'));
         this.app.use(cookieParser());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));

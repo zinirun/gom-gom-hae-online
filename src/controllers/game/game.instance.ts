@@ -8,11 +8,11 @@ class GameInstance {
     public readonly LOBBY: string = 'lobby';
     private readonly MAX_CHANNEL: number = 5;
     private readonly MAX_USER: number = 5;
-    public filterOnlyUserId = (roomArray): [] => roomArray.map((r) => r.userId);
     private onUsers: roomUser[][] = [];
     private onWords: string[][] = [];
     private lobbyCount: number;
     private dict: string[];
+    public filterOnlyUserId = (roomArray): [] => roomArray.map((r) => r.userId);
 
     constructor() {
         this.lobbyCount = 0;
@@ -21,7 +21,7 @@ class GameInstance {
             this.onWords.push([]);
         }
         this.dict = fs
-            .readFileSync(path.resolve(__dirname + '/dict/dict.txt'))
+            .readFileSync(path.join(__dirname, '/dict/dict.txt'))
             .toString()
             .replace(/\r/g, '')
             .split('\n');
