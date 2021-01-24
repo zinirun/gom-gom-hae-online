@@ -112,11 +112,11 @@ $(function () {
 
         if (viewtime < 10) {
             socket.emit('gg', data, curUser);
-            viewTime += 10000;
+            viewtime += 100000;
         } else if (viewtime < 10 && curUser != data.userId) {
             if (!curUser) {
                 socket.emit('gg', data, curUser);
-                viewTime += 10000;
+                viewtime += 100000;
             }
         } else {
             viewtime -= 100;
