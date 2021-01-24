@@ -1,7 +1,6 @@
 var onUserList = [];
 var prev_onUserList = [];
 var curUser, turnCnt, userCnt;
-let loseFlag = false;
 
 var socketId = '';
 var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
@@ -112,18 +111,12 @@ $(function () {
         $('#timeBar').css('width', timebarPx + 'px');
 
         if (viewtime < 10) {
-            loseFlag = true;
-            if(loseFlag) {
-                socket.emit('gg', data, curUser);
-                loseFlag = false;
-            }
+            socket.emit('gg', data, curUser);
+            viewTime += 10000;
         } else if (viewtime < 10 && curUser != data.userId) {
             if (!curUser) {
-                loseFlag = true;
-                if(loseFlag) {
-                    socket.emit('gg', data, curUser);
-                    loseFlag = false;
-                }
+                socket.emit('gg', data, curUser);
+                viewTime += 10000;
             }
         } else {
             viewtime -= 100;
