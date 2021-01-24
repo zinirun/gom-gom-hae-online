@@ -5,8 +5,6 @@ import * as cookieParser from 'cookie-parser';
 import * as logger from 'morgan';
 import * as expressSession from 'express-session';
 import * as http from 'http';
-import * as helmet from 'helmet';
-import * as hpp from 'hpp';
 import Controller from '../interfaces/controller.interface';
 import socketActions from '../controllers/game/socket.actions';
 
@@ -44,8 +42,6 @@ class App {
     }
 
     private setMiddlewares() {
-        this.app.use(helmet());
-        this.app.use(hpp());
         this.app.use(logger('combined'));
         this.app.use(cookieParser());
         this.app.use(bodyParser.json());
