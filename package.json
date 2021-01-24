@@ -25,8 +25,6 @@
     "fs": "^0.0.1-security",
     "hangul-js": "^0.2.6",
     "hangul-tools": "^0.1.4",
-    "helmet": "^4.4.0",
-    "hpp": "^0.2.3",
     "morgan": "^1.10.0",
     "socket.io": "^3.1.0"
   }
