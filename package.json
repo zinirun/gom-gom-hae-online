@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/src/bin/index.js",
-    "postinstall": "tsc && mv -i -v public dist/ && rm -v -rf src",
+    "postinstall": "tsc && mv -v public dist/ && rm -v -rf src",
     "dev": "ts-node ./src/bin/index.ts"
   },
   "devDependencies": {
