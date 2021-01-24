@@ -224,8 +224,8 @@ $(function () {
 
     //게임오버 - 퇴장
     function getout(gguser) {
-        if (gguser == data.userId) {
-            window.location.href = '/game/loser';
+        if (gguser === data.userId) {
+            window.location = '/game/loser';
         }
     }
 
