@@ -6,7 +6,8 @@
   "author": "zinirun <www.zini.run>",
   "license": "MIT",
   "scripts": {
-    "start": "pm2 start",
+    "start": "forever dist/src/bin/index.js",
+    "postinstall": "tsc && mv -i -v public dist/ && rm -v -rf src",
     "dev": "ts-node ./src/bin/index.ts"
   },
   "devDependencies": {
