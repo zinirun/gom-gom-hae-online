@@ -31,24 +31,30 @@ class GameController implements Controller {
         return await new Promise(async () => {
             const uid = req.body.nickname;
             const rid = req.body.ch;
-            await this.game
-                .enterGame(uid, rid)
-                .then(() => {
-                    req.session.user = {
-                        uid,
-                        rid,
-                    };
-                    res.render('game.ejs', {
-                        userId: uid,
-                        roomId: rid,
+            if (rid) {
+                await this.game
+                    .enterGame(uid, rid)
+                    .then(() => {
+                        req.session.user = {
+                            uid,
+                            rid,
+                        };
+                        res.render('game.ejs', {
+                            userId: uid,
+                            roomId: rid,
+                        });
+                    })
+                    .catch((error: joinGameResult) => {
+                        const { message } = error;
+                        res.render('index.ejs', {
+                            msg: message,
+                        });
                     });
-                })
-                .catch((error: joinGameResult) => {
-                    const { message } = error;
-                    res.render('index.ejs', {
-                        msg: message,
-                    });
+            } else {
+                res.render('index.ejs', {
+                    msg: '채널을 선택하세요!',
                 });
+            }
         });
     };
 }
