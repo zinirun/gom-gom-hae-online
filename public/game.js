@@ -1,6 +1,7 @@
 var onUserList = [];
 var prev_onUserList = [];
 var curUser, turnCnt, userCnt;
+let loseFlag = false;
 
 var socketId = '';
 var userColor = ['#ffe98a', '#ebff8a', '#b0fff4', '#e8deff', '#ffdef6'];
@@ -103,7 +104,6 @@ $(function () {
     });
 
     // TIMER PART //
-
     var viewtime = timeover;
     var timebarPx = 210;
 
@@ -123,8 +123,14 @@ $(function () {
             timebarPx -= 210 / (timeover / 100);
         }
     };
-
     // TIMER PART END //
+
+    //게임오버시 플래그 변경
+    function getout(gguser) {
+        if (gguser === data.userId) {
+            loseFlag = true;
+        }
+    }
 
     //유저 변화, 새로운 게임 시작
     function newGame() {
@@ -220,14 +226,8 @@ $(function () {
                 ']님 게임 오버! 첫 턴부터 게임을 이어갑니다!</b>',
         );
         $('.userchat_box').scrollTop($('.userchat_box')[0].scrollHeight);
+        getout(gguser);
     });
-
-    //게임오버 - 퇴장
-    function getout(gguser) {
-        if (gguser === data.userId) {
-            window.location = '/game/loser';
-        }
-    }
 
     socket.on('notice', function (nickname, message) {
         if (nickname == data.userId) {
