@@ -8,7 +8,7 @@ body {
     font-size: 30px;
     font-weight: 300;
     color: black;
-    background: #60340D;
+    background: #60340d;
 }
 
 span,
@@ -32,7 +32,7 @@ div {
     background: white;
     padding: 1.5rem 40px 40px 2.5rem;
     margin-top: 190px;
-    box-shadow: 0px 0px 20px 10px #986C44;
+    box-shadow: 0px 0px 20px 10px #986c44;
     border-radius: 20px;
 }
 
@@ -43,7 +43,7 @@ div {
     font-weight: 800;
 }
 
-.highversion{
+.highversion {
     vertical-align: top;
     font-size: 15px;
     font-weight: 700;
@@ -64,14 +64,14 @@ div {
 .text_info {
     font-size: 18px;
     font-weight: 500;
-    color: #BE7F46;
+    color: #be7f46;
 }
 
-form[name="setUser"] {
+form[name='setUser'] {
     margin-top: 10px;
 }
 
-input[name="nickname"] {
+input[name='nickname'] {
     float: left;
     background: white;
     width: 280px;
@@ -85,7 +85,7 @@ input[name="nickname"] {
     border-right: 0px;
 }
 
-input[name="login"] {
+input[name='login'] {
     float: left;
     cursor: pointer;
     background: dodgerblue;
@@ -100,8 +100,8 @@ input[name="login"] {
     border-radius: 0 10px 10px 0;
 }
 
-input[name="login"]:hover {
-    animation: loginAni 0.7s 0s infinite
+input[name='login']:hover {
+    animation: loginAni 0.7s 0s infinite;
 }
 
 @keyframes loginAni {
@@ -110,22 +110,21 @@ input[name="login"]:hover {
     }
 
     25% {
-        background: #17DBD8;
+        background: #17dbd8;
     }
 
     50% {
-        background: #00D99F;
+        background: #00d99f;
     }
 
     75% {
-        background: #00A9D9;
+        background: #00a9d9;
     }
 
     100% {
         background: dodgerblue;
     }
 }
-
 
 .hide_win {
     display: none;
@@ -147,7 +146,6 @@ input[name="login"]:hover {
     color: dodgerblue;
     font-size: 140px;
     font-weight: 600;
-
 }
 
 .load_list {
@@ -172,7 +170,7 @@ input[name="login"]:hover {
     width: 70px;
     height: 55px;
     line-height: 8px;
-    background: #729DC3;
+    background: #729dc3;
     font-size: 16px;
     margin: 0 3.1px;
     margin-bottom: 20px;
@@ -193,11 +191,11 @@ input[name="login"]:hover {
     color: white;
 }
 
-input[type="radio"] {
+input[type='radio'] {
     display: none;
 }
 
-input[type="radio"]:checked + div {
+input[type='radio']:checked + div {
     display: inline-block;
     background: dodgerblue;
 }
@@ -302,7 +300,7 @@ a:hover {
 }
 
 /*GAME.HTML*/
-.view_wrap{
+.view_wrap {
     text-align: center;
     margin-bottom: 10px;
 }
@@ -322,12 +320,12 @@ a:hover {
 }
 
 .userchain {
-    background: #EEAE73;
+    background: #eeae73;
     display: inline-block;
     height: 80px;
     padding: 0.5rem 1rem;
     border-radius: 10px;
-    color: #41260E;
+    color: #41260e;
     margin: 0 10px;
 }
 
@@ -350,9 +348,9 @@ input {
     outline: none;
 }
 
-input[name="myanswer"] {
-    background: #EEAE73;
-    color: #41260E;
+input[name='myanswer'] {
+    background: #eeae73;
+    color: #41260e;
     width: 193px;
     font-family: inherit;
     font-size: 36px;
@@ -363,8 +361,7 @@ input[name="myanswer"] {
     border: 5px solid white;
 }
 
-
-.answerDiv{
+.answerDiv {
     width: 463px;
     display: inline-block;
     float: left;
@@ -372,7 +369,7 @@ input[name="myanswer"] {
     padding: 10px;
 }
 
-#chatlog{
+#chatlog {
     padding: 10px;
     margin: 0px;
 }
@@ -383,7 +380,7 @@ input[name="myanswer"] {
     display: inline-block;
     width: 348px;
     height: 400px;
-    box-shadow: -2px 0px 37px -20px rgba(0,145,255,0.85);
+    box-shadow: -2px 0px 37px -20px rgba(0, 145, 255, 0.85);
 }
 
 .userchat_box {
@@ -396,10 +393,10 @@ input[name="myanswer"] {
     overflow: auto;
 }
 
-input[name="mychatting"] {
+input[name='mychatting'] {
     float: left;
-    background: #A1D3FF;
-    color: #41260E;
+    background: #a1d3ff;
+    color: #41260e;
     width: 328px;
     height: 55px;
     font-family: inherit;
@@ -425,7 +422,7 @@ li {
     border-radius: 7px;
 }
 
-.gamebutton:hover{
+.gamebutton:hover {
     background: orange;
 }
 
@@ -466,8 +463,8 @@ li {
     border-radius: 10px;
     display: inline-block;
     text-align: center;
-    width: 85px;
-    height: 85px;
+    width: 80px;
+    height: 80px;
 }
 
 .uicon {
