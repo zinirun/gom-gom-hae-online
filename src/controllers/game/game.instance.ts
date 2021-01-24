@@ -1,6 +1,7 @@
 import joinGameResult from '../../interfaces/joinGameResult.interface';
 import roomUser from '../../interfaces/roomUser.interface';
 import dooum from './dict/dooumRule';
+import * as path from 'path';
 import * as fs from 'fs';
 
 class GameInstance {
@@ -11,7 +12,7 @@ class GameInstance {
     private onUsers: roomUser[][] = [];
     private onWords: string[][] = [];
     private lobbyCount: number;
-    private dict;
+    private dict: string[];
 
     constructor() {
         this.lobbyCount = 0;
@@ -20,7 +21,7 @@ class GameInstance {
             this.onWords.push([]);
         }
         this.dict = fs
-            .readFileSync(__dirname + '/dict/dict.txt')
+            .readFileSync(path.resolve(__dirname + '/dict/dict.txt'))
             .toString()
             .replace(/\r/g, '')
             .split('\n');
