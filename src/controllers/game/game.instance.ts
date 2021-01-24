@@ -19,7 +19,11 @@ class GameInstance {
             this.onUsers.push([]);
             this.onWords.push([]);
         }
-        this.dict = fs.readFileSync('./dict/dict.txt').toString().replace(/\r/g, '').split('\n');
+        this.dict = fs
+            .readFileSync(__dirname + '/dict/dict.txt')
+            .toString()
+            .replace(/\r/g, '')
+            .split('\n');
     }
 
     public getInGameUserCounts(): number[] {
