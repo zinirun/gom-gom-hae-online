@@ -1,6 +1,6 @@
 # 곰곰해온라인 (리팩토링)
 
-<img src="preview.png" alt="곰곰해온라인" width="280" style="display:block; margin: 0 auto; margin-bottom: 10px" />
+<img src="preview.png" alt="곰곰해온라인" width="320" style="margin-bottom: 15px" />
 
 - [곰곰해온라인](https://bearchain.herokuapp.com) - 초기 접속에 몇 초 정도가 소요된다
 - [old version](https://github.com/zinirun/gom-gom-hae-online/tree/e2329cc9e15a5a2b55878fca3d795799b7caff84/old-version)
