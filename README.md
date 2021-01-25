@@ -1,9 +1,10 @@
 # 곰곰해온라인 (리팩토링)
 
-<img src="preview.png" alt="곰곰해온라인" width="320" style="margin-bottom: 15px" />
+<img src="preview.png" alt="곰곰해온라인1" width="330" style="margin-bottom: 15px" />
+<img src="preview2.png" alt="곰곰해온라인2" width="330" style="margin-bottom: 15px" />
 
 - [곰곰해온라인](https://bearchain.herokuapp.com) - 초기 접속에 몇 초 정도가 소요된다
-- [old version](https://github.com/zinirun/gom-gom-hae-online/tree/e2329cc9e15a5a2b55878fca3d795799b7caff84/old-version)
+- [old version code](https://github.com/zinirun/gom-gom-hae-online/tree/e2329cc9e15a5a2b55878fca3d795799b7caff84/old-version)
 
 - 제작 동기
   - 피시방에서 게임 기다리는 시간이 너무 지루해 → 다같이 할 수 있는 웹 게임이 없을까? → 게임은 간단하고, 마음 편하게 하고싶어 → 그냥 내가 만들어볼까? → 제작 시작
